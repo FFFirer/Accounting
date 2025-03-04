@@ -8,19 +8,40 @@ importers:
 
   .:
     dependencies:
+      '@solidjs/router':
+        specifier: ^0.15.3
+        version: 0.15.3(solid-js@1.9.5)
+      solid-form-context:
+        specifier: ^0.0.12
+        version: 0.0.12(solid-js@1.9.5)
       solid-js:
         specifier: ^1.9.5
         version: 1.9.5
+      solid-toast:
+        specifier: ^0.5.0
+        version: 0.5.0(solid-js@1.9.5)
+      sweetalert2:
+        specifier: ^11.17.2
+        version: 11.17.2
+      sweetalert2-solid-content:
+        specifier: ^0.1.5
+        version: 0.1.5(solid-js@1.9.5)(sweetalert2@11.17.2)
     devDependencies:
+      '@types/node':
+        specifier: ^22.13.9
+        version: 22.13.9
+      nswag:
+        specifier: ^14.2.0
+        version: 14.2.0
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
       vite:
         specifier: ^6.0.0
-        version: 6.0.0
+        version: 6.0.0(@types/node@22.13.9)
       vite-plugin-solid:
         specifier: ^2.11.6
-        version: 2.11.6(solid-js@1.9.5)(vite@6.0.0)
+        version: 2.11.6(solid-js@1.9.5)(vite@6.0.0(@types/node@22.13.9))
 
 packages:
 
@@ -357,6 +378,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@solidjs/router@0.15.3':
+    resolution: {integrity: sha512-iEbW8UKok2Oio7o6Y4VTzLj+KFCmQPGEpm1fS3xixwFBdclFVBvaQVeibl1jys4cujfAK5Kn6+uG2uBm3lxOMw==}
+    peerDependencies:
+      solid-js: ^1.8.6
+
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
 
@@ -371,6 +397,9 @@ packages:
 
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
+
+  '@types/node@22.13.9':
+    resolution: {integrity: sha512-acBjXdRJ3A6Pb3tqnw9HZmyR3Fiol3aGxRCK1x3d+6CDAMjl7I649wpSd+yNURCjbOUGu9tqtLKnTGxmK6CyGw==}
 
   babel-plugin-jsx-dom-expressions@0.39.3:
     resolution: {integrity: sha512-6RzmSu21zYPlV2gNwzjGG9FgODtt9hIWnx7L//OIioIEuRcnpDZoY8Tr+I81Cy1SrH4qoDyKpwHHo6uAMAeyPA==}
@@ -472,6 +501,11 @@ packages:
   node-releases@2.0.18:
     resolution: {integrity: sha512-d9VeXT4SJ7ZeOqGX6R5EM022wpL+eWPooLI+5UpWn2jCT1aosUQEhQP214x33Wkwx3JQMvIm+tIoVOdodFS40g==}
 
+  nswag@14.2.0:
+    resolution: {integrity: sha512-paE+kXYx6yNknEG0LmGmoOFGFRN6GKvEjmDivDX417wyapWeZGnd5TCEBvcyfRaUlp6oDRucWGVD1ZKTyGSJ/g==}
+    engines: {npm: '>=3.10.8'}
+    hasBin: true
+
   parse5@7.2.1:
     resolution: {integrity: sha512-BuBYQYlv1ckiPdQi/ohiivi9Sagc9JG+Ozs0r7b/0iK3sKmrb0b9FdWdBbOdx6hBCM/F9Ir82ofnBhtZOjCRPQ==}
 
@@ -501,6 +535,11 @@ packages:
     resolution: {integrity: sha512-rqEO6FZk8mv7Hyv4UCj3FD3b6Waqft605TLfsCe/BiaylRpyyMC0b+uA5TJKawX3KzMrdi3wsLbCaLplrQmBvQ==}
     engines: {node: '>=10'}
 
+  solid-form-context@0.0.12:
+    resolution: {integrity: sha512-QEjgC7Cw8XxX0l2nxD7Onn+5QP80FfdLZfVepv2Ehn4gXsJu9s8saVpVy8y1ulOzQHMxzJEJPMP84+zhczeBLA==}
+    peerDependencies:
+      solid-js: ^1.8.11
+
   solid-js@1.9.5:
     resolution: {integrity: sha512-ogI3DaFcyn6UhYhrgcyRAMbu/buBJitYQASZz5WzfQVPP10RD2AbCoRZ517psnezrasyCbWzIxZ6kVqet768xw==}
 
@@ -509,14 +548,31 @@ packages:
     peerDependencies:
       solid-js: ^1.3
 
+  solid-toast@0.5.0:
+    resolution: {integrity: sha512-t770JakjyS2P9b8Qa1zMLOD51KYKWXbTAyJePVUoYex5c5FH5S/HtUBUbZAWFcqRCKmAE8KhyIiCvDZA8bOnxQ==}
+    peerDependencies:
+      solid-js: ^1.5.4
+
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
+
+  sweetalert2-solid-content@0.1.5:
+    resolution: {integrity: sha512-KbinaTzJsQzU13v+knm+VYcLhC7vG79+Fqzx3lr427Jm4/2FnIchfPtnHyM53PL/+HRUQHv79f5ZdVWAJRD4mQ==}
+    peerDependencies:
+      solid-js: ^1.8.11
+      sweetalert2: ^11.14.2
+
+  sweetalert2@11.17.2:
+    resolution: {integrity: sha512-HKxDr1IyV3Lxr3W6sb61qm/p2epFIEdr5EKwteRFHnIg6f8nHFl2kX++DBVz16Mac+fFiU3hMpjq1L6yE2Ge5w==}
 
   typescript@5.7.2:
     resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  undici-types@6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
   update-browserslist-db@1.1.1:
     resolution: {integrity: sha512-R8UzCaa9Az+38REPiJ1tXlImTJXlVfgHZsglwBD/k6nj76ctsH1E3q4doGrukiLQd3sGQYu56r5+lo5r94l29A==}
@@ -847,6 +903,10 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.27.4':
     optional: true
 
+  '@solidjs/router@0.15.3(solid-js@1.9.5)':
+    dependencies:
+      solid-js: 1.9.5
+
   '@types/babel__core@7.20.5':
     dependencies:
       '@babel/parser': 7.26.2
@@ -869,6 +929,10 @@ snapshots:
       '@babel/types': 7.26.0
 
   '@types/estree@1.0.6': {}
+
+  '@types/node@22.13.9':
+    dependencies:
+      undici-types: 6.20.0
 
   babel-plugin-jsx-dom-expressions@0.39.3(@babel/core@7.26.0):
     dependencies:
@@ -966,6 +1030,8 @@ snapshots:
 
   node-releases@2.0.18: {}
 
+  nswag@14.2.0: {}
+
   parse5@7.2.1:
     dependencies:
       entities: 4.5.0
@@ -1010,6 +1076,10 @@ snapshots:
 
   seroval@1.1.1: {}
 
+  solid-form-context@0.0.12(solid-js@1.9.5):
+    dependencies:
+      solid-js: 1.9.5
+
   solid-js@1.9.5:
     dependencies:
       csstype: 3.1.3
@@ -1025,9 +1095,22 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  solid-toast@0.5.0(solid-js@1.9.5):
+    dependencies:
+      solid-js: 1.9.5
+
   source-map-js@1.2.1: {}
 
+  sweetalert2-solid-content@0.1.5(solid-js@1.9.5)(sweetalert2@11.17.2):
+    dependencies:
+      solid-js: 1.9.5
+      sweetalert2: 11.17.2
+
+  sweetalert2@11.17.2: {}
+
   typescript@5.7.2: {}
+
+  undici-types@6.20.0: {}
 
   update-browserslist-db@1.1.1(browserslist@4.24.2):
     dependencies:
@@ -1037,7 +1120,7 @@ snapshots:
 
   validate-html-nesting@1.2.2: {}
 
-  vite-plugin-solid@2.11.6(solid-js@1.9.5)(vite@6.0.0):
+  vite-plugin-solid@2.11.6(solid-js@1.9.5)(vite@6.0.0(@types/node@22.13.9)):
     dependencies:
       '@babel/core': 7.26.0
       '@types/babel__core': 7.20.5
@@ -1045,21 +1128,22 @@ snapshots:
       merge-anything: 5.1.7
       solid-js: 1.9.5
       solid-refresh: 0.6.3(solid-js@1.9.5)
-      vite: 6.0.0
-      vitefu: 1.0.4(vite@6.0.0)
+      vite: 6.0.0(@types/node@22.13.9)
+      vitefu: 1.0.4(vite@6.0.0(@types/node@22.13.9))
     transitivePeerDependencies:
       - supports-color
 
-  vite@6.0.0:
+  vite@6.0.0(@types/node@22.13.9):
     dependencies:
       esbuild: 0.24.0
       postcss: 8.4.49
       rollup: 4.27.4
     optionalDependencies:
+      '@types/node': 22.13.9
       fsevents: 2.3.3
 
-  vitefu@1.0.4(vite@6.0.0):
+  vitefu@1.0.4(vite@6.0.0(@types/node@22.13.9)):
     optionalDependencies:
-      vite: 6.0.0
+      vite: 6.0.0(@types/node@22.13.9)
 
   yallist@3.1.1: {}
