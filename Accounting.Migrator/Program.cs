@@ -1,2 +1,7 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using System.CommandLine;
+
+using Accounting.Migrator;
+
+var root = new Root();
+
+await root.InvokeAsync(args);

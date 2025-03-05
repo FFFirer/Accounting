@@ -1,0 +1,20 @@
+{
+  "profiles": {
+    "list": {
+      "commandName": "Project",
+      "commandLineArgs": "list --no-connect"
+    },
+    "list--pending": {
+      "commandName": "Project",
+      "commandLineArgs": "list --pending"
+    },
+    "update": {
+      "commandName": "Project",
+      "commandLineArgs": "update"
+    },
+    "drop": {
+      "commandName": "Project",
+      "commandLineArgs": "drop"
+    }
+  }
+}

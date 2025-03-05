@@ -4,6 +4,12 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <RootNamespace>Accounting</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Accounting.Abstractions\Accounting.Abstractions.csproj" />
+  </ItemGroup>
 
 </Project>

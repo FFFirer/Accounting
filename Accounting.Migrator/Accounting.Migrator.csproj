@@ -7,4 +7,22 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Authors>fffirer</Authors>
+    <VersionPrefix>1.0.6</VersionPrefix>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>accounting</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <UserSecretsId>269c3ca7-43b6-4aab-be28-f4f66a6c69d9</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Accounting.Stores\Accounting.Stores.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
+    <PackageReference Include="System.CommandLine" />
+  </ItemGroup>
+
 </Project>
