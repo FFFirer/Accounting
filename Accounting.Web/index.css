@@ -1,5 +1,9 @@
 ﻿@import "tailwindcss";
 
+@plugin "daisyui" {
+    themes: light --default, dark --prefersdark;
+}
+
 @layer utilities {
 
     .blazor-error-boundary {

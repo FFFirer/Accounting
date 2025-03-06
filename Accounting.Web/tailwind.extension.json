@@ -10,7 +10,7 @@
   "BuildFiles": [
     {
       "Input": "index.css",
-      "Output": "wwwroot\\lib\\tailwind.css"
+      "Output": "wwwroot\\app.css"
     }
   ],
   "PackageConfigurationFile": "package.json",
