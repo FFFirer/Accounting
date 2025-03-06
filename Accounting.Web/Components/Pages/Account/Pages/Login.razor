@@ -1,9 +1,41 @@
 ﻿@page "/Account/Login"
 
 <div class="flex size-full flex-1 items-center justify-center">
-    <p>Login</p>
+    <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+            <legend class="fieldset-legend">Login</legend>
+
+            <label class="fieldset-label">UserName</label>
+            <InputText @bind-Value="Input.UserName" id="Input.Email" class="input" placeholder="User Name" />
+
+            <label class="fieldset-label">Password</label>
+            <InputText @bind-Value="Input.Password" id="Input.Password" class="input" type="password" autocomplete="current-password" placeholder="Password" />
+
+            <label class="fieldset-label">
+                <InputCheckbox class="checkbox" @bind-Value="Input.RememberMe" id="Input.RememberMe" />
+                Remember me
+            </label>
+
+            <button type="submit" class="btn btn-block btn-primary">Submit</button>
+        </fieldset>
+    </EditForm>
 </div>
 
 @code {
 
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    public async Task LoginUser()
+    {
+        throw new NotImplementedException();
+    }
+
+    private class InputModel
+    {
+        public string? UserName { get; set; }
+        public string? Password { get; set; }
+        public bool RememberMe { get; set; }
+    }
 }
+

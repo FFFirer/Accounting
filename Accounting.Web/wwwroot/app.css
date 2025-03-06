@@ -8,6 +8,7 @@
       "Courier New", monospace;
     --color-black: #000;
     --spacing: 0.25rem;
+    --container-xs: 20rem;
     --text-xl: 1.25rem;
     --text-xl--line-height: calc(1.75 / 1.25);
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
@@ -1432,6 +1433,16 @@
   .mt-3 {
     margin-top: calc(var(--spacing) * 3);
   }
+  .fieldset-legend {
+    margin-bottom: calc(0.25rem * -1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(0.25rem * 2);
+    padding-block: calc(0.25rem * 2);
+    color: var(--color-base-content);
+    font-weight: 600;
+  }
   .status {
     display: inline-block;
     aspect-ratio: 1 / 1;
@@ -1492,6 +1503,23 @@
     padding: 0.5rem;
     min-height: 4rem;
   }
+  .fieldset-label {
+    display: flex;
+    align-items: center;
+    gap: calc(0.25rem * 1.5);
+    color: color-mix(in oklab, var(--color-base-content) 60%, transparent);
+    &:is(label, a), &:has(input) {
+      cursor: pointer;
+    }
+  }
+  .fieldset {
+    display: grid;
+    gap: calc(0.25rem * 1.5);
+    padding-block: calc(0.25rem * 1);
+    font-size: 0.75rem;
+    grid-template-columns: 1fr;
+    grid-auto-rows: max-content;
+  }
   .chat {
     display: grid;
     column-gap: calc(0.25rem * 3);
@@ -1528,6 +1556,13 @@
   .h-\[100vh\] {
     height: 100vh;
   }
+  .btn-wide {
+    width: 100%;
+    max-width: calc(0.25rem * 64);
+  }
+  .btn-block {
+    width: 100%;
+  }
   .w-6 {
     width: calc(var(--spacing) * 6);
   }
@@ -1539,6 +1574,9 @@
   }
   .w-52 {
     width: calc(var(--spacing) * 52);
+  }
+  .w-xs {
+    width: var(--container-xs);
   }
   .flex-1 {
     flex: 1;
@@ -1637,14 +1675,23 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
+  .border-base-300 {
+    border-color: var(--color-base-300);
+  }
   .bg-base-100 {
     background-color: var(--color-base-100);
+  }
+  .bg-base-200 {
+    background-color: var(--color-base-200);
   }
   .fill-current {
     fill: currentColor;
   }
   .p-2 {
     padding: calc(var(--spacing) * 2);
+  }
+  .p-4 {
+    padding: calc(var(--spacing) * 4);
   }
   .menu-title {
     padding-inline: calc(0.25rem * 3);
