@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Accounting
 {
-    public class JwtUtils
+    public interface IUserRefreshTokenStore
     {
-
+        IQueryable<UserRefreshToken> UserRefreshTokens { get; }
     }
 }
