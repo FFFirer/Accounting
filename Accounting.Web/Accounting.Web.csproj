@@ -18,4 +18,9 @@
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Accounting.Core\Accounting.Core.csproj" />
+    <ProjectReference Include="..\Accounting.Stores\Accounting.Stores.csproj" />
+  </ItemGroup>
+
 </Project>
