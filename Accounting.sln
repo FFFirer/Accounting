@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决�
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accounting.Web", "Accounting.Web\Accounting.Web.csproj", "{F6D03133-686F-40C9-8546-DC1A1D5D7F74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevProxy", "DevProxy\DevProxy.csproj", "{D98AA763-07E9-4F7E-9AAA-50BC5C8841BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,18 @@ Global
 		{F6D03133-686F-40C9-8546-DC1A1D5D7F74}.Release|x64.Build.0 = Release|Any CPU
 		{F6D03133-686F-40C9-8546-DC1A1D5D7F74}.Release|x86.ActiveCfg = Release|Any CPU
 		{F6D03133-686F-40C9-8546-DC1A1D5D7F74}.Release|x86.Build.0 = Release|Any CPU
+		{D98AA763-07E9-4F7E-9AAA-50BC5C8841BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D98AA763-07E9-4F7E-9AAA-50BC5C8841BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D98AA763-07E9-4F7E-9AAA-50BC5C8841BB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D98AA763-07E9-4F7E-9AAA-50BC5C8841BB}.Debug|x64.Build.0 = Debug|Any CPU
+		{D98AA763-07E9-4F7E-9AAA-50BC5C8841BB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D98AA763-07E9-4F7E-9AAA-50BC5C8841BB}.Debug|x86.Build.0 = Debug|Any CPU
+		{D98AA763-07E9-4F7E-9AAA-50BC5C8841BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D98AA763-07E9-4F7E-9AAA-50BC5C8841BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D98AA763-07E9-4F7E-9AAA-50BC5C8841BB}.Release|x64.ActiveCfg = Release|Any CPU
+		{D98AA763-07E9-4F7E-9AAA-50BC5C8841BB}.Release|x64.Build.0 = Release|Any CPU
+		{D98AA763-07E9-4F7E-9AAA-50BC5C8841BB}.Release|x86.ActiveCfg = Release|Any CPU
+		{D98AA763-07E9-4F7E-9AAA-50BC5C8841BB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

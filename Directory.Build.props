@@ -1,0 +1,9 @@
+<Project>
+  <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
+  <PropertyGroup>
+    <EnableBuildFrontend>false</EnableBuildFrontend>
+    <FrontendDirectory>$(MSBuildThisFileDirectory)</FrontendDirectory>
+    <FrontendBuildDirectory>$(MSBuildThisFileDirectory)/dist</FrontendBuildDirectory>
+    <FrontendPublishDirectory>$(MSBuildThisFileDirectory)/Accounting.Web/wwwroot/frontend</FrontendPublishDirectory>
+  </PropertyGroup>
+</Project>

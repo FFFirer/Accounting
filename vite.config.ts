@@ -1,0 +1,35 @@
+import { defineConfig } from 'vite';
+import solidPlugin from 'vite-plugin-solid';
+import { resolve } from 'path';
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  plugins: [tailwindcss(), solidPlugin()],
+  server: {
+    port: 3000,
+  },
+  build: {
+    target: 'esnext',
+    lib: {
+      name: "AccountingFrontend",
+      entry: resolve(__dirname, './frontend/lib.tsx'),
+      fileName: "index"
+    }
+  },
+  resolve: {
+    alias: [
+      {
+        find: '~',
+        replacement: resolve(__dirname, './src')
+      },
+      {
+        find: '@frontend',
+        replacement: resolve(__dirname, './frontend')
+      },
+      {
+        find: '@web',
+        replacement: resolve(__dirname, './Accounting.Web')
+      }
+    ]
+  }
+});
