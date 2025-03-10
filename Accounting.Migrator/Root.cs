@@ -78,7 +78,7 @@ namespace Accounting.Migrator
 
                 foreach (var m in db.Database.GetMigrations())
                 {
-                    context.Console.WriteLine($"{(applied.ContainsKey(m) ? "¡Ì" : ""):3}{m}");
+                    context.Console.WriteLine($"{(applied.ContainsKey(m) ? "âˆš" : " ")}\t{m}");
                 }
 
                 return;

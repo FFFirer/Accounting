@@ -1,0 +1,123 @@
+﻿@page "/Account/Register";
+@using Microsoft.AspNetCore.Identity
+@using System.Text
+@using Microsoft.AspNetCore.WebUtilities
+@using System.Text.Encodings.Web
+
+
+@inject UserManager<User> UserManager
+@inject IUserStore<User> UserStore
+@inject SignInManager<User> SignInManager
+@inject IEmailSender<User> EmailSender
+@inject ILogger<Register> Logger
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+
+<div class="flex size-full flex-1 flex-col items-center justify-center">
+
+    <StatusMessage Message="@Message"></StatusMessage>
+
+    <EditForm Model="Input" method="post" FormName="register">
+        <AntiforgeryToken />
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+            <legend class="fieldset-legend">Register</legend>
+
+            <label class="fieldset-label">Email</label>
+            <InputText @bind-Value="Input.Email" id="Input.Email" class="input" placeholder="Email address" />
+
+            <label class="fieldset-label">Password</label>
+            <InputText @bind-Value="Input.Password" id="Input.Password" class="input" type="password"
+                autocomplete="current-password" placeholder="Password" />
+
+            <label class="fieldset-label">Confirm Password</label>
+            <InputText @bind-Value="Input.ConfirmPassword" id="Input.ConfirmPassword" class="input" type="password"
+                autocomplete="current-password" placeholder="Confirm Password" />
+
+            <button type="submit" class="btn btn-block btn-primary mt-3">Register</button>
+        </fieldset>
+    </EditForm>
+
+    <div class="flex justify-between">
+        <NavLink href="/Account/Login" class="btn btn-link">Log in</NavLink>
+    </div>
+</div>
+
+@code {
+    private IEnumerable<IdentityError>? identityErrors;
+
+    [SupplyParameterFromForm]
+    private RegisterModel Input { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error =>
+    error.Description))}";
+
+    public async Task RegisterUser(EditContext editContext)
+    {
+        var user = CreateUser();
+
+        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+        var emailStore = GetEmailStore();
+        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        var result = await UserManager.CreateAsync(user, Input.Password!);
+
+        if (!result.Succeeded)
+        {
+            identityErrors = result.Errors;
+            return;
+        }
+
+        Logger.LogInformation("User created a new account with password.");
+
+        var userId = await UserManager.GetUserIdAsync(user);
+        var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
+        NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
+        new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
+
+        await EmailSender.SendConfirmationLinkAsync(user, Input.Email!, HtmlEncoder.Default.Encode(callbackUrl));
+
+        if (UserManager.Options.SignIn.RequireConfirmedAccount)
+        {
+            RedirectManager.RedirectTo(
+            "Account/RegisterConfirmation",
+            new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
+        }
+
+        await SignInManager.SignInAsync(user, isPersistent: false);
+        RedirectManager.RedirectTo(ReturnUrl);
+    }
+
+
+    private User CreateUser()
+    {
+        try
+        {
+            return Activator.CreateInstance<User>();
+        }
+        catch
+        {
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. " +
+            $"Ensure that '{nameof(User)}' is not an abstract class and has a parameterless constructor.");
+        }
+    }
+
+    private IUserEmailStore<User> GetEmailStore()
+    {
+        if (!UserManager.SupportsUserEmail)
+        {
+            throw new NotSupportedException("The default UI requires a user store with email support.");
+        }
+        return (IUserEmailStore<User>)UserStore;
+    }
+
+    private class RegisterModel
+    {
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+        public string? ConfirmPassword { get; set; }
+    }
+}

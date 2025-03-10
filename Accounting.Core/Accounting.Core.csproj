@@ -12,4 +12,8 @@
     <ProjectReference Include="..\Accounting.Abstractions\Accounting.Abstractions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MailKit" />
+  </ItemGroup>
+
 </Project>
