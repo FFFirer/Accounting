@@ -6,7 +6,7 @@ namespace DevProxy
 {
     public static class CustomRequestTransforms
     {
-        static readonly Regex _regex = new Regex(@"(^.*?/app/index).*?\.(js|css)", RegexOptions.Compiled);
+        static readonly Regex _regex = new Regex(@"(^.*?/frontend/index).*?\.(js|css)", RegexOptions.Compiled);
         public static ValueTask RemoveFileHash(RequestTransformContext context)
         {
             var formatted = _regex.Replace(context.Path, "$1.$2");

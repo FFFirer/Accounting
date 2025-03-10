@@ -8,7 +8,7 @@ builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
     .AddTransforms(buildContext =>
     {
-        if(buildContext.Route.Match.Path == "/app/index.{css,js}")
+        if(buildContext.Route.Match.Path == "/frontend/index.{css,js}")
         {
             buildContext.AddRequestTransform(CustomRequestTransforms.RemoveFileHash);
         }
