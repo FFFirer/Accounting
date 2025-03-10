@@ -17,8 +17,7 @@
 
     <StatusMessage Message="@Message"></StatusMessage>
 
-    <EditForm Model="Input" method="post" FormName="register">
-        <AntiforgeryToken />
+    <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
         <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
             <legend class="fieldset-legend">Register</legend>
 
