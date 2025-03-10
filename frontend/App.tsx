@@ -1,4 +1,4 @@
 import { Router } from "@solidjs/router";
 import { Routes } from "./routes";
 
-export default () => <Router children={Routes} />
+export default () => <Router base="/app" children={Routes} />

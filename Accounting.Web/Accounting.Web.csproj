@@ -7,15 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="tailwind.extension.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="tailwind.extension.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="wwwroot\lib\" />
+    <Folder Include="wwwroot\frontend\" />
   </ItemGroup>
 
   <ItemGroup>

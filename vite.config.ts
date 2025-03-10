@@ -8,11 +8,12 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  base: '/frontend/',
   build: {
     target: 'esnext',
     lib: {
       name: "AccountingFrontend",
-      entry: resolve(__dirname, './frontend/lib.tsx'),
+      entry: resolve(__dirname, './frontend/index.tsx'),
       fileName: "index"
     }
   },

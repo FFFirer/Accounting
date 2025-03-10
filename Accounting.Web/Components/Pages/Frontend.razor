@@ -1,0 +1,21 @@
+﻿@page "/app/{**AppRoute}"
+@inject IJSRuntime js
+@rendermode InteractiveServer
+
+<div @ref="elementReference"></div>
+
+@code {
+    [Parameter] public string AppRoute { get; set; } = default!;
+
+    public ElementReference elementReference { get; set; }
+    public IJSObjectReference? module { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            module = await js.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/Frontend.razor.js");
+            await module.InvokeVoidAsync("renderApp", elementReference);
+        }
+    }
+}

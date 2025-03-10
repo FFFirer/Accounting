@@ -1,0 +1,1 @@
+﻿export { renderApp } from "/frontend/index.js";
