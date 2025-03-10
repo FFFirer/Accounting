@@ -1,0 +1,20 @@
+<Project>
+    <Target Name="PnpmInstall" Condition="'$(EnableBuildFrontend)' == 'true'" Inputs="$(FrontendDirectory)/package.json" Outputs="$(FrontendDirectory)/node_modules/.install-stamp">
+        <Exec Command="pnpm ci" WorkingDirectory="$(FrontendDirectory)"  Condition="'$(RestorePackagesWithLockFile)' == 'true'" />
+        <Exec Command="pnpm install" WorkingDirectory="$(FrontendDirectory)"  Condition="'$(RestorePackagesWithLockFile)' != 'true'" />
+
+        <Touch Files="$(FrontendDirectory)/node_modules/.install-stamp" AlwaysCreate="true" />
+    </Target>
+
+    <Target Name="PnpmRunBuild" Condition="'$(EnableBuildFrontend)' == 'true'" DependsOnTargets="PnpmInstall" BeforeTargets="BeforeBuild" >
+        <Exec Command="pnpm run build" WorkingDirectory="$(FrontendDirectory)" />
+        <Exec Command="pnpm run css:build" WorkingDirectory="$(FrontendDirectory)"  />
+
+        <ItemGroup>
+            <DistFiles Include="$(FrontendBuildDirectory)\**\*.*" />
+        </ItemGroup>
+
+        <RemoveDir Directories="$(FrontendPublishDirectory)" />
+        <Copy SourceFiles="@(DistFiles)" DestinationFolder="$(FrontendPublishDirectory)%(RecursiveDir)" />
+    </Target>
+</Project>

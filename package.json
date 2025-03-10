@@ -8,8 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "css:build": "npx tailwindcss -i ./app/index.css -o ./dist/index.css",
-    "css:watch": "npx tailwindcss -w -i ./index.css -o ./app/index.css"
+    "css:build": "npx tailwindcss -i ./frontend/index.css -o ./dist/index.css"
   },
   "keywords": [],
   "author": "",
