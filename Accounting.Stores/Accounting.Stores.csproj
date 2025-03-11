@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="CommandLineParser" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

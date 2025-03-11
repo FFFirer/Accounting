@@ -16,4 +16,7 @@
     <ProjectReference Include="..\Accounting.Stores\Accounting.Stores.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Serilog.AspNetCore" />
+  </ItemGroup>
 </Project>

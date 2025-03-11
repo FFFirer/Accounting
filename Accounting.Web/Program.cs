@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AccountingDbContext>(options =>
@@ -37,6 +39,16 @@ builder.Services.AddIdentityCore<User>()
     .AddSignInManager()
     .AddDefaultTokenProviders()
     .AddEmailSender();
+
+builder.Services.AddSerilog(
+    (services, lc) => {
+        lc
+        .ReadFrom.Configuration(builder.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext()
+        .WriteTo.Console();
+    }
+)
 
 var app = builder.Build();
 
