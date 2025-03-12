@@ -9,5 +9,5 @@ namespace Accounting;
 
 public static class ServiceCollectionExtensions
 {
-
+    
 }

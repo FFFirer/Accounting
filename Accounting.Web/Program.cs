@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,10 @@ builder.Services.AddIdentityCore<User>()
     .AddDefaultTokenProviders()
     .AddEmailSender();
 
+builder.Services.AddAccountingCore()
+    .AddFileStorage()
+    .AddEntityFrameworkCoreStores();
+
 builder.Services.AddSerilog(
     (services, lc) => {
         lc
@@ -48,9 +53,23 @@ builder.Services.AddSerilog(
         .Enrich.FromLogContext()
         .WriteTo.Console();
     }
-)
+);
+
+builder.Host.UseSerilog();
 
 var app = builder.Build();
+
+app.UseSerilogRequestLogging(
+    options =>
+    {
+        options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+        options.GetLevel = (httpContext, elapsed, ex) => ex != null ? LogEventLevel.Error : LogEventLevel.Information;
+        options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+        {
+            diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value ?? "");
+            diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+        };
+    });
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using Accounting.Documents;
+using Accounting.FileStorage;
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ namespace Accounting
         public DbSet<UserRefreshToken> UserRefreshTokens => Set<UserRefreshToken>();
         public DbSet<Document> Documents => Set<Document>();
         public DbSet<Document<SiteSettings>> SiteSettings => Set<Document<SiteSettings>>();
+        public DbSet<FileInformation> FileInformations => Set<FileInformation>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -20,7 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Accounting.Abstractions\Accounting.Abstractions.csproj" />
+    <ProjectReference Include="..\Accounting.Core\Accounting.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="FileStorage\" />
   </ItemGroup>
 
 </Project>

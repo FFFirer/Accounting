@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="MailKit" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
   </ItemGroup>
 
 </Project>
