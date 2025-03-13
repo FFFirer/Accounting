@@ -49,28 +49,17 @@ builder.Services.AddIdentityCore<User>()
     .AddDefaultTokenProviders()
     .AddEmailSender();
 
-builder.Services.ConfigureApplicationCookie(x =>
+builder.Services.AddHttpLogging(options =>
 {
-    x.LoginPath = "/Account/Login";
-
-    var old = x.Events.OnRedirectToLogin;
-
-    x.Events.OnRedirectToLogin = (context) =>
-    {
-        if (context.HttpContext.Request.Headers.TryGetValue("X-Forwarded-Proto", out var schema))
-        {
-            var index = context.RedirectUri.IndexOf(':');
-            var redirectSchema = context.RedirectUri[0..(index + 1)];
-
-            if (redirectSchema != schema)
-            {
-                context.RedirectUri = schema + context.RedirectUri[index..];
-            }
-        }
-
-        return old.Invoke(context);
-    };
+    options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPropertiesAndHeaders;
 });
+
+builder.Services.Configure<ForwardedHeadersOptions>(
+    options =>
+    {
+        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    }
+);
 
 builder.Services.AddAccountingCore()
     .AddFileStorage()
@@ -81,6 +70,14 @@ builder.Services.AddSerilog();
 builder.Host.UseSerilog();
 
 var app = builder.Build();
+
+app.UseForwardedHeaders();
+app.UseHttpLogging();
+app.Use(async (context, next) =>
+{
+    app.Logger.LogInformation("Request RemoteIp: {RemoteIpAndPort}", context.Connection.RemoteIpAddress);
+    await next(context);
+});
 
 app.UseSerilogRequestLogging(
     options =>
@@ -102,16 +99,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.All
-});
-
 app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
