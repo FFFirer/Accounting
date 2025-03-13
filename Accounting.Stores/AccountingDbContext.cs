@@ -20,6 +20,7 @@ namespace Accounting
         public DbSet<Document> Documents => Set<Document>();
         public DbSet<Document<SiteSettings>> SiteSettings => Set<Document<SiteSettings>>();
         public DbSet<FileInformation> FileInformations => Set<FileInformation>();
+        public DbSet<StorageBucket> StorageBuckets => Set<StorageBucket>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -31,6 +32,8 @@ namespace Accounting
             builder.ApplyConfiguration(new DocumentEntityConfiguration());
 
             builder.ApplyConfiguration(new JsonDocumentEntityConfiguration<SiteSettings>(documentEntity));
+
+            builder.Entity<FileInformation>().HasOne(f => f.Bucket);
         }
     }
 }

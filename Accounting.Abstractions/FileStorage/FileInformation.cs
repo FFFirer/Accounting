@@ -24,7 +24,7 @@ public class FileInformation
 
     public string? OriginalFileName { get; set; }
 
-    public decimal Size { get; set; }
+    public long? Size { get; set; }
 
     /// <summary>
     /// 上传时间
@@ -34,7 +34,7 @@ public class FileInformation
     /// <summary>
     /// 过期时间
     /// </summary>
-    public DateTimeOffset ExpirationTime { get; set; }
+    public DateTimeOffset? ExpirationTime { get; set; }
 
     public bool Deleted { get; set; }
 
@@ -42,4 +42,9 @@ public class FileInformation
     /// 过期时删除
     /// </summary>
     public bool DeleteWhenExpired { get; set; }
+
+    /// <summary>
+    /// 存储桶
+    /// </summary>
+    public StorageBucket? Bucket { get; set; }
 }

@@ -15,11 +15,17 @@ public interface IQueryableFileStorageStore
     Task<PageList<FileInformation>> ExecutePageAsync(FileInfomationQueryFilter filter, IPageQuery pageQuery, CancellationToken cancellationToken = default);
 
     Task<FileInformation?> FindByIdAsync(Guid id, CancellationToken cancellationToken = default);
-}
+
+    Task<List<StorageBucket>> ExecuteQueryBucketsAsync(Expression<Func<StorageBucket, bool>>? predicate = null, CancellationToken cancellationToken = default);
+    Task<PageList<StorageBucket>> ExecutePageBucketsAsync(StorageBucketQueryFilter filter, IPageQuery pageQuery, CancellationToken cancellationToken = default);    
+    Task<StorageBucket?> FindBucketAsync(string name, CancellationToken cancellationToken);
+};
 
 public interface IFileStorageStore : IQueryableFileStorageStore
 {
-    Task<FileInformation> CreateAsync(CancellationToken cancellationToken);
+    Task UpdateAsync(FileInformation fileInformation, CancellationToken cancellationToken);
+    Task CreateAsync(FileInformation fileInformation, CancellationToken cancellationToken);
 
-    Task SaveAsync(FileInformation fileInformation, CancellationToken cancellationToken);
+    Task CreateBucketAsync(StorageBucket bucket, CancellationToken cancellationToken);
+    Task<StorageBucket> GetOrCreateBucketAsync(string bucketName, CancellationToken cancellationToken);
 }

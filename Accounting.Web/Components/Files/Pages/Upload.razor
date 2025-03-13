@@ -1,0 +1,53 @@
+﻿@page "/Files/Upload"
+@rendermode InteractiveServer
+
+@using Accounting.FileStorage
+@using Microsoft.Extensions.Options
+
+@inject IOptions<FileStorageOptions> Options
+@inject IFileUploadService FileUploadService
+
+<PageTitle>Upload - Billings</PageTitle>
+
+<Alert />
+
+<fieldset class="fieldset">
+    <legend class="fieldset-legend">Pick a file</legend>
+    <InputFile class="file-input w-full" OnChange="ChangeFiles" />
+    <label class="fieldset-label">文件大小不超过 @PrettySize</label>
+</fieldset>
+
+<button type="button" class="btn btn-primary" @onclick="UploadFile">上传</button>
+
+@code {
+
+    protected string? ErrorMessage { get; set; }
+
+    public string PrettySize => Accounting.Common.DisplayHelper.PrettySizeDisplay(Options.Value.MaxFileSize);
+
+    protected IBrowserFile? File { get; set; }
+
+    [CascadingParameter]
+    protected HttpContext HttpContext { get; set; } = default!;
+
+    public async Task UploadFile()
+    {
+        if(File is null)
+        {
+            ErrorMessage = "Error: " + "请选择要上传的文件";
+            return;
+        }
+
+        var token = await FileUploadService.GetUploadTokenAsync();
+        var result =  await FileUploadService.UploadAsync(token, File.Name, File, null);
+
+        if(result.Succeeded) { ErrorMessage = "上传成功"; return; }
+
+        ErrorMessage = "Error: " + result.ToString();
+    }
+
+    public void ChangeFiles(InputFileChangeEventArgs args)
+    {
+        File = args.File;
+    }
+}

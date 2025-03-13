@@ -10,7 +10,7 @@ namespace Accounting
 {
     public static class JwtUtils
     {
-        public static string GenerateToken(string key, string issuer, string audience, double expiryMinutes, IEnumerable<Claim> claims)
+        public static string GenerateToken(string key, string issuer, string audience, int expiryMinutes, IEnumerable<Claim> claims)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -26,6 +26,7 @@ namespace Accounting
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
+            
             return tokenHandler.WriteToken(token);
         }
 

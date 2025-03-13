@@ -45,7 +45,12 @@ public static class AccountingBuilderExtensions
         // 内部FileStorageProvider实现
         builder.Services.TryAddScoped<IFileStorageServiceFactory, FileStorageServiceFactory>();
         builder.Services.TryAddKeyedScoped<IFileStorageService, FileSystemFileStorageService>(FileStorageProvider.FileSystem);
-        builder.Services.AddScoped<IFileStorageService>(sp => sp.GetRequiredService<IFileStorageServiceFactory>().GetService());
+        builder.Services.TryAddKeyedScoped<IFileUploadService, FileSystemFileStorageService>(FileStorageProvider.FileSystem);
+        
+        builder.Services.AddScoped<IFileStorageService>(sp => 
+            sp.GetRequiredService<IFileStorageServiceFactory>().GetService());
+        builder.Services.AddScoped<IFileUploadService>(sp => 
+            sp.GetRequiredService<IFileStorageServiceFactory>().GetUploadService());
 
         return builder;
     }
@@ -75,7 +80,31 @@ public static class AccountingBuilderExtensions
                         var provider = t.GetCustomAttribute<FileStorageProviderAttribute>();
                         if (provider is not null)
                         {
-                            builder.Services.TryAddKeyedScoped(t, provider.Provider);
+                            builder.Services.TryAddKeyedScoped(typeof(IFileStorageService), provider.Provider, t);
+                        }
+                    })
+                .AddInjection(
+                    (ass, t) =>
+                    {
+                        if (t.IsAbstract)
+                        {
+                            return false;
+                        }
+
+                        var fileStorageInterface = t.GetInterface(nameof(IFileUploadService));
+                        if (fileStorageInterface is null)
+                        {
+                            return false;
+                        }
+
+                        return true;
+                    },
+                    (ass, t) =>
+                    {
+                        var provider = t.GetCustomAttribute<FileStorageProviderAttribute>();
+                        if (provider is not null)
+                        {
+                            builder.Services.TryAddKeyedScoped(typeof(IFileUploadService), provider.Provider, t);
                         }
                     })
                 .Register();
