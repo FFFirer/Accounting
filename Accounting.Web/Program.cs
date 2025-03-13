@@ -3,6 +3,7 @@ using Accounting.Email;
 using Accounting.Web.Components;
 using Accounting.Web.Components.Account;
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +11,12 @@ using Microsoft.EntityFrameworkCore;
 
 using Serilog;
 using Serilog.Events;
+
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,20 +49,34 @@ builder.Services.AddIdentityCore<User>()
     .AddDefaultTokenProviders()
     .AddEmailSender();
 
+builder.Services.ConfigureApplicationCookie(x =>
+{
+    x.LoginPath = "/Account/Login";
+
+    var old = x.Events.OnRedirectToLogin;
+
+    x.Events.OnRedirectToLogin = (context) =>
+    {
+        if (context.HttpContext.Request.Headers.TryGetValue("X-Forwarded-Proto", out var schema))
+        {
+            var index = context.RedirectUri.IndexOf(':');
+            var redirectSchema = context.RedirectUri[0..(index + 1)];
+
+            if (redirectSchema != schema)
+            {
+                context.RedirectUri = schema + context.RedirectUri[index..];
+            }
+        }
+
+        return old.Invoke(context);
+    };
+});
+
 builder.Services.AddAccountingCore()
     .AddFileStorage()
     .AddEntityFrameworkCoreStores();
 
-builder.Services.AddSerilog(
-    (services, lc) =>
-    {
-        lc
-        .ReadFrom.Configuration(builder.Configuration)
-        .ReadFrom.Services(services)
-        .Enrich.FromLogContext()
-        .WriteTo.Console();
-    }
-);
+builder.Services.AddSerilog();
 
 builder.Host.UseSerilog();
 
@@ -96,4 +117,8 @@ app.MapRazorComponents<App>()
 
 app.MapAdditionalIdentityEndpoints();
 
+// Console.WriteLine("Hello world");
+
 app.Run();
+
+// Console.WriteLine("Hello world2");
