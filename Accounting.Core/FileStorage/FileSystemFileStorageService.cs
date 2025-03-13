@@ -30,7 +30,7 @@ public class FileSystemFileStorageService : IFileStorageService, IFileUploadServ
         this.Errors = descriptions ?? new ErrorDescriptions();
     }
 
-    public Task<string> GetUploadTokenAsync(string bucketName = "Default", CancellationToken cancellationToken = default)
+    public Task<string> GetUploadTokenAsync(string? bucketName = "Default", CancellationToken cancellationToken = default)
     {
         Validate();
 

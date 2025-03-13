@@ -47,7 +47,8 @@ builder.Services.AddAccountingCore()
     .AddEntityFrameworkCoreStores();
 
 builder.Services.AddSerilog(
-    (services, lc) => {
+    (services, lc) =>
+    {
         lc
         .ReadFrom.Configuration(builder.Configuration)
         .ReadFrom.Services(services)
@@ -82,7 +83,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
-    ForwardedHeaders = ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto
+    ForwardedHeaders = ForwardedHeaders.All
 });
 
 app.UseHttpsRedirection();

@@ -1,53 +1,66 @@
 ﻿@page "/Files/Upload"
 @rendermode InteractiveServer
+@attribute [Authorize]
 
 @using Accounting.FileStorage
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Options
+@using System.ComponentModel.DataAnnotations
 
 @inject IOptions<FileStorageOptions> Options
 @inject IFileUploadService FileUploadService
 
-<PageTitle>Upload - Billings</PageTitle>
+<PageTitle>Upload</PageTitle>
 
-<Alert />
+<Alert Message="@Message" />
 
-<fieldset class="fieldset">
-    <legend class="fieldset-legend">Pick a file</legend>
-    <InputFile class="file-input w-full" OnChange="ChangeFiles" />
-    <label class="fieldset-label">文件大小不超过 @PrettySize</label>
-</fieldset>
+<EditForm Model="Input" method="post" OnValidSubmit="UploadFile" FormName="upload">
+    <DataAnnotationsValidator />
+    <fieldset class="fieldset mb-3">
+        <legend class="fieldset-legend">Upload to:</legend>
+        <InputText class="input w-full" id="Input.BucketName" placeholder="Bucket name..."
+            @bind-Value="Input.BucketName" />
+        <ValidationMessage For="() => Input.BucketName" class="text-danger" />
+    </fieldset>
+    <fieldset class="fieldset mb-3">
+        <legend class="fieldset-legend">Pick a file</legend>
+        <InputFile class="file-input w-full" id="Input.File" @bind-Value="Input.File" />
+        <label class="fieldset-label">文件大小不超过 @PrettySize</label>
+        <ValidationMessage For="() => Input.File" class="text-danger" />
+    </fieldset>
+</EditForm>
+
 
 <button type="button" class="btn btn-primary" @onclick="UploadFile">上传</button>
 
 @code {
 
-    protected string? ErrorMessage { get; set; }
+    protected string? Message { get; set; }
 
     public string PrettySize => Accounting.Common.DisplayHelper.PrettySizeDisplay(Options.Value.MaxFileSize);
-
-    protected IBrowserFile? File { get; set; }
 
     [CascadingParameter]
     protected HttpContext HttpContext { get; set; } = default!;
 
+    [SupplyParameterFromForm]
+    private UploadModel Input { get; set; } = new();
+
     public async Task UploadFile()
     {
-        if(File is null)
-        {
-            ErrorMessage = "Error: " + "请选择要上传的文件";
-            return;
-        }
+        var token = await FileUploadService.GetUploadTokenAsync(this.Input.BucketName, default);
+        var result = await FileUploadService.UploadAsync(token, Input.File!.Name, Input.File, null);
 
-        var token = await FileUploadService.GetUploadTokenAsync();
-        var result =  await FileUploadService.UploadAsync(token, File.Name, File, null);
+        if (result.Succeeded) { Message = "上传成功"; return; }
 
-        if(result.Succeeded) { ErrorMessage = "上传成功"; return; }
-
-        ErrorMessage = "Error: " + result.ToString();
+        Message = "Error: " + result.ToString();
     }
 
-    public void ChangeFiles(InputFileChangeEventArgs args)
+    private class UploadModel
     {
-        File = args.File;
+        [Required(AllowEmptyStrings = false)]
+        public string? BucketName { get; set; } = "Default";
+
+        [Required]
+        public IBrowserFile? File { get; set; }
     }
 }

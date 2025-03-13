@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Accounting.FileStorage;
 
@@ -10,8 +11,9 @@ public class StorageBucket
         this.CreatationTime = DateTimeOffset.UtcNow;
     }
 
+    [MaxLength(5000)]
     public string Name { get; set; }
     public DateTimeOffset CreatationTime { get; set; }
 
-    public List<FileInformation> Files { get; set; }
+    public List<FileInformation> Files { get; set; } = [];
 }

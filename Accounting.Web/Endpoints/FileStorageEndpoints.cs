@@ -22,10 +22,11 @@ public static class FileStorageEndpoints
     }
 
     public static async Task<Ok<string>> PreUpload(
+        [FromQuery] string? bucket,
         [FromServices] IFileUploadService service,
         [FromServices] IHttpContextAccessor httpContextAccessor)
     {
-        var token = await service.GetUploadTokenAsync(httpContextAccessor.HttpContext!.RequestAborted);
+        var token = await service.GetUploadTokenAsync(bucket, httpContextAccessor.HttpContext!.RequestAborted);
         var request = httpContextAccessor.HttpContext?.Request;
         var uploadUrl = $"{request?.Scheme}://{request?.Host}{request?.PathBase}/upload?token={token}";
         return TypedResults.Ok(uploadUrl);

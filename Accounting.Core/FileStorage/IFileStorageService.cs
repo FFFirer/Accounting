@@ -10,7 +10,7 @@ namespace Accounting.FileStorage;
 
 public interface IFileUploadService
 {
-    Task<string> GetUploadTokenAsync(string bucketName = "Default", CancellationToken cancellationToken = default);
+    Task<string> GetUploadTokenAsync(string? bucketName = "Default", CancellationToken cancellationToken = default);
     Task<Result<ClaimsPrincipal>> ValidateTokenAsync(string token, CancellationToken cancellationToken = default);
     Task<Result> UploadAsync(string uploadToken, string originalFileName, IBrowserFile uploadFile, Action<FileUploadOptions>? configureUploadOptions = null, CancellationToken cancellationToken = default);
 }
