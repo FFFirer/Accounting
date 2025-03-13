@@ -12,4 +12,6 @@ public class StorageBucket
 
     public string Name { get; set; }
     public DateTimeOffset CreatationTime { get; set; }
+
+    public List<FileInformation> Files { get; set; }
 }
