@@ -49,10 +49,10 @@ builder.Services.AddIdentityCore<User>()
     .AddDefaultTokenProviders()
     .AddEmailSender();
 
-builder.Services.AddHttpLogging(options =>
-{
-    options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPropertiesAndHeaders;
-});
+// builder.Services.AddHttpLogging(options =>
+// {
+//     options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPropertiesAndHeaders;
+// });
 
 builder.Services.Configure<ForwardedHeadersOptions>(
     options =>
@@ -72,12 +72,14 @@ builder.Host.UseSerilog();
 var app = builder.Build();
 
 app.UseForwardedHeaders();
-app.UseHttpLogging();
-app.Use(async (context, next) =>
-{
-    app.Logger.LogInformation("Request RemoteIp: {RemoteIpAndPort}", context.Connection.RemoteIpAddress);
-    await next(context);
-});
+
+// app.UseHttpLogging();
+
+// app.Use(async (context, next) =>
+// {
+//     app.Logger.LogInformation("Request RemoteIp: {RemoteIpAndPort}", context.Connection.RemoteIpAddress);
+//     await next(context);
+// });
 
 app.UseSerilogRequestLogging(
     options =>
