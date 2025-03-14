@@ -1,0 +1,90 @@
+﻿@page "/Files"
+@using Accounting.Data
+@using Accounting.FileStorage
+@using System.Linq.Dynamic.Core
+@using Microsoft.EntityFrameworkCore
+
+@implements IAsyncDisposable
+
+@inject IFileStorageStore FileStorageStore
+
+<div class="size-full flex flex-1 flex-col">
+    <div class="flex flex-row mb-2">
+        <InputText class="input grow me-2" placeholder="查询条件" @bind-Value="Filter" @bind:event="input"></InputText>
+        <button type="button" class="btn btn-primary" @onclick="UpdateFilter">
+            <SearchIcon></SearchIcon>
+            查询
+        </button>
+    </div>
+    <div class="grow overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+        <QuickGrid class="table" TGridItem="FileInformation" ItemsProvider="GetFiles" Pagination="pagination">
+            @* <PropertyColumn class="text-nowrap" Property="@(p => p.Id)"></PropertyColumn> *@
+            <PropertyColumn class="text-nowrap" Property="@(p => p.OriginalFileName)"></PropertyColumn>
+            <TemplateColumn class="text-nowrap" Context="file" Title="Tags">
+                @if (file.Tags != null && file.Tags.Count > 0)
+                {
+                    foreach (var tag in file.Tags)
+                    {
+                        <span class="badge badge-sm">@tag</span>
+                    }
+                }
+            </TemplateColumn>
+            @* <PropertyColumn Property="@(p => p.Bucket)"></PropertyColumn> *@
+            <TemplateColumn class="text-nowrap" Context="file" Title="Bucket">
+                @file.Bucket?.Name
+            </TemplateColumn>
+            <PropertyColumn class="text-nowrap" Property="@(p => p.CreatedTime)" Format="yyyy-MM-dd HH:mm:ss">
+            </PropertyColumn>
+            <PropertyColumn class="text-nowrap" Property="@(p => p.ExpirationTime)" Format="yyyy-MM-dd HH:mm:ss">
+            </PropertyColumn>
+            @* <PropertyColumn class="text-nowrap" Property="@(p => p.Deleted)"></PropertyColumn> *@
+            <TemplateColumn Context="file" Title="Deleted">
+                <span class="text-nowrap">
+                    @(file.Deleted ? "YES" : "No")
+                </span>
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
+    <Paginator State="pagination" />
+</div>
+
+@code {
+    private string? Filter { get; set; }
+
+    private void UpdateFilter()
+    {
+        var queryable = string.IsNullOrWhiteSpace(Filter)
+        ? FileStorageStore.Source
+        : FileStorageStore.Source.Where(Filter);
+    }
+
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    private IQueryable<StorageBucket>? Buckets { get; set; }
+    private IQueryable<FileInformation>? Files { get; set; }
+
+    public async ValueTask<GridItemsProviderResult<FileInformation>> GetFiles(GridItemsProviderRequest<FileInformation>
+    request)
+    {
+        var filter = new FileInfomationQueryFilter
+        {
+            FileId = null,
+            FileName = null,
+            BucketName = null,
+            IncludeBucket = true
+        };
+
+
+        var result = await FileStorageStore.ExecutePageAsync(filter, new PageQuery(pagination.CurrentPageIndex,
+        pagination.ItemsPerPage)
+        );
+
+        return new GridItemsProviderResult<FileInformation>
+        {
+            Items = result.Datas,
+            TotalItemCount = result.TotalCount
+        };
+    }
+
+
+    public async ValueTask DisposeAsync() => await FileStorageStore.DisposeAsync();
+}

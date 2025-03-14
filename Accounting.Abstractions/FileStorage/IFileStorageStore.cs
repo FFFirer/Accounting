@@ -6,7 +6,7 @@ using Accounting.Data;
 
 namespace Accounting.FileStorage;
 
-public interface IQueryableFileStorageStore
+public interface IQueryableFileStorageStore : IStoreBase
 {
     IQueryable<FileInformation> Source { get; }
 

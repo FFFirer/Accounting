@@ -1,5 +1,7 @@
 ﻿@page "/Error"
 @using System.Diagnostics
+@using Microsoft.AspNetCore.Authorization
+@attribute [AllowAnonymous]
 
 <PageTitle>Error</PageTitle>
 
@@ -34,3 +36,10 @@
     protected override void OnInitialized() =>
         RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
 }
+    using Microsoft.AspNetCore.Authorization;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 3 "C:\Users\0sdf0\source\repos\Accounting\Accounting.Web\Components\Pages\Error.razor"

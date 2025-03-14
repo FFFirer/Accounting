@@ -1,8 +1,18 @@
 @if (string.IsNullOrWhiteSpace(DisplayMessage) == false)
 {
-    var statusMessageClass = DisplayMessage.StartsWith("Error") ? "alert-error" : "alert-success";
+    var statusMessageClass = IsError ? "alert-error" : "alert-success";
     <div class="alert @statusMessageClass" role="alert">
-        @DisplayMessage
+        @if (IsError)
+        {
+            <CircleXIcon />
+        }
+        else
+        {
+            <CircleCheckIcon />
+        }
+        <span>
+            @DisplayMessage
+        </span>
     </div>
 }
 
@@ -11,4 +21,6 @@
     public string? Message { get; set; }
 
     private string? DisplayMessage => Message;
+
+    private bool IsError => DisplayMessage?.StartsWith("Error") ?? false;
 }

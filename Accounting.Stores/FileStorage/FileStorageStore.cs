@@ -9,13 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Accounting;
 
-public class FileStorageStore : StoreBase, IFileStorageStore
+public class FileStorageStore : AccountingBaseStore, IFileStorageStore
 {
-    protected virtual AccountingDbContext Context { get; set; }
-
-    public FileStorageStore(AccountingDbContext context)
+    public FileStorageStore(AccountingDbContext context) : base(context)
     {
-        Context = context;
+
     }
 
     public IQueryable<FileInformation> Source => Context.Set<FileInformation>().AsNoTracking();
@@ -34,13 +32,35 @@ public class FileStorageStore : StoreBase, IFileStorageStore
 
         var query = this.Source;
 
+        if (string.IsNullOrWhiteSpace(filter.FileId) == false)
+        {
+            var guid = Guid.Parse(filter.FileId);
+
+            query = query.Where(x => x.Id == guid);
+        }
+
+        if (string.IsNullOrWhiteSpace(filter.FileName) == false)
+        {
+            query = query.Where(x => x.OriginalFileName == null || x.OriginalFileName.Contains(filter.FileName));
+        }
+
+        if (filter.IncludeBucket)
+        {
+            query = query.Include(x => x.Bucket);
+        }
+
+        if (string.IsNullOrWhiteSpace(filter.BucketName) == false)
+        {
+            query = query.Where(x => x.Bucket == null || x.Bucket!.Name.StartsWith(filter.BucketName));
+        }
+
         var totalCount = await query.CountAsync(cancellationToken);
 
         var page = new PageList<FileInformation>(totalCount);
 
         if (totalCount > 0)
         {
-            page.Datas.AddRange(await query.DoPageAsync(pageQuery).ToListAsync(cancellationToken));
+            page.Datas.AddRange(await query.DoPage(pageQuery).ToListAsync(cancellationToken));
         }
 
         return page;
@@ -81,12 +101,6 @@ public class FileStorageStore : StoreBase, IFileStorageStore
         return SaveChanges(cancellationToken);
     }
 
-    protected override Task SaveChanges(CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return AutoSaveChanges ? Context.SaveChangesAsync(cancellationToken) : Task.CompletedTask;
-    }
 
     public Task CreateAsync(FileInformation fileInformation, CancellationToken cancellationToken)
     {
@@ -149,7 +163,7 @@ public class FileStorageStore : StoreBase, IFileStorageStore
 
         if (totalCount > 0)
         {
-            page.Datas.AddRange(await query.DoPageAsync(pageQuery).ToListAsync(cancellationToken));
+            page.Datas.AddRange(await query.DoPage(pageQuery).ToListAsync(cancellationToken));
         }
 
         return page;

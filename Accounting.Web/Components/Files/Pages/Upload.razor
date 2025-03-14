@@ -1,9 +1,10 @@
 ﻿@page "/Files/Upload"
-@rendermode InteractiveServer
 @attribute [Authorize]
+@rendermode InteractiveServer
 
 @using Accounting.FileStorage
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Mvc
 @using Microsoft.Extensions.Options
 @using System.ComponentModel.DataAnnotations
 
@@ -14,27 +15,21 @@
 
 <Alert Message="@Message" />
 
-<EditForm Model="Input" method="post" OnValidSubmit="UploadFile" FormName="upload">
-    <DataAnnotationsValidator />
-    <fieldset class="fieldset mb-3">
-        <legend class="fieldset-legend">Upload to:</legend>
-        <InputText class="input w-full" id="Input.BucketName" placeholder="Bucket name..."
-            @bind-Value="Input.BucketName" />
-        <ValidationMessage For="() => Input.BucketName" class="text-danger" />
-    </fieldset>
-    <fieldset class="fieldset mb-3">
-        <legend class="fieldset-legend">Pick a file</legend>
-        <InputFile class="file-input w-full" id="Input.File" @bind-Value="Input.File" />
-        <label class="fieldset-label">文件大小不超过 @PrettySize</label>
-        <ValidationMessage For="() => Input.File" class="text-danger" />
-    </fieldset>
-</EditForm>
-
+<fieldset class="fieldset mb-3">
+    <legend class="fieldset-legend">Upload to:</legend>
+    <InputText class="input w-full" id="Input.BucketName" placeholder="Bucket name..." @bind-Value="Input.BucketName" />
+</fieldset>
+<fieldset class="fieldset mb-3">
+    <legend class="fieldset-legend">Pick a file</legend>
+    <InputFile class="file-input w-full" id="Input.File" OnChange="FileChanged" />
+    <label class="fieldset-label">文件大小不超过 @PrettySize</label>
+</fieldset>
 
 <button type="button" class="btn btn-primary" @onclick="UploadFile">上传</button>
+<NavLink class="btn btn-link" href="/Files">查看所有文件</NavLink>
 
 @code {
-
+    static UploadModelValidator Validator = new UploadModelValidator();
     protected string? Message { get; set; }
 
     public string PrettySize => Accounting.Common.DisplayHelper.PrettySizeDisplay(Options.Value.MaxFileSize);
@@ -47,12 +42,29 @@
 
     public async Task UploadFile()
     {
+        var validationResult = Validator.Validate(this.Input);
+
+        if (validationResult.IsValid == false)
+        {
+            Message = "Error: " + string.Join(";", validationResult.Errors.Select(x => x.ErrorMessage));
+            return;
+        }
+
         var token = await FileUploadService.GetUploadTokenAsync(this.Input.BucketName, default);
         var result = await FileUploadService.UploadAsync(token, Input.File!.Name, Input.File, null);
 
         if (result.Succeeded) { Message = "上传成功"; return; }
 
         Message = "Error: " + result.ToString();
+        Input.File = null;
+
+    }
+
+    private Task FileChanged(InputFileChangeEventArgs e)
+    {
+        Input.File = e.File;
+
+        return Task.CompletedTask;
     }
 
     private class UploadModel
@@ -60,7 +72,17 @@
         [Required(AllowEmptyStrings = false)]
         public string? BucketName { get; set; } = "Default";
 
+        [Display(Name = "文件")]
         [Required]
         public IBrowserFile? File { get; set; }
+    }
+
+    private class UploadModelValidator : AbstractValidator<UploadModel>
+    {
+        public UploadModelValidator()
+        {
+            RuleFor(x => x.BucketName).NotEmpty();
+            RuleFor(x => x.File).NotEmpty();
+        }
     }
 }
