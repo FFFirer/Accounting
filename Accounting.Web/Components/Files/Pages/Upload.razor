@@ -81,8 +81,11 @@
     {
         public UploadModelValidator()
         {
-            RuleFor(x => x.BucketName).NotEmpty();
-            RuleFor(x => x.File).NotEmpty();
+            RuleFor(x => x.BucketName)
+                .NotEmpty()
+                .Must(x => x?.StartsWith('/') == false).WithMessage("不能以'/'开头");
+
+            RuleFor(x => x.File).NotEmpty(); 
         }
     }
 }

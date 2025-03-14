@@ -9,17 +9,27 @@
 @inject IFileStorageStore FileStorageStore
 
 <div class="size-full flex flex-1 flex-col">
-    <div class="flex flex-row mb-2">
-        <InputText class="input grow me-2" placeholder="查询条件" @bind-Value="Filter" @bind:event="input"></InputText>
+    <div class="flex flex-row mb-2 gap-2">
+        <InputText class="input grow" placeholder="File Id..." @bind-Value="FileId" @bind:event="input"></InputText>
+        <InputText class="input grow" placeholder="File Name..." @bind-Value="FileName" @bind:event="input"></InputText>
+        <InputText class="input grow" placeholder="Bucket Name..." @bind-Value="BucketName" @bind:event="input">
+        </InputText>
+
         <button type="button" class="btn btn-primary" @onclick="UpdateFilter">
             <SearchIcon></SearchIcon>
             查询
         </button>
+        <NavLink href="/Files/Upload" class="btn">
+            <FileUpIcon />
+            上传
+        </NavLink>
     </div>
     <div class="grow overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-        <QuickGrid class="table" TGridItem="FileInformation" ItemsProvider="GetFiles" Pagination="pagination">
-            @* <PropertyColumn class="text-nowrap" Property="@(p => p.Id)"></PropertyColumn> *@
-            <PropertyColumn class="text-nowrap" Property="@(p => p.OriginalFileName)"></PropertyColumn>
+        <QuickGrid class="table" RowClass="GetRowClass" TGridItem="FileInformation" ItemsProvider="GetFiles">
+            <TemplateColumn Context="file" Title="File">
+                <div class="font-bold">@file.OriginalFileName</div>
+                <div class="text-sm opacity-50">@file.Id</div>
+            </TemplateColumn>
             <TemplateColumn class="text-nowrap" Context="file" Title="Tags">
                 @if (file.Tags != null && file.Tags.Count > 0)
                 {
@@ -29,7 +39,6 @@
                     }
                 }
             </TemplateColumn>
-            @* <PropertyColumn Property="@(p => p.Bucket)"></PropertyColumn> *@
             <TemplateColumn class="text-nowrap" Context="file" Title="Bucket">
                 @file.Bucket?.Name
             </TemplateColumn>
@@ -49,32 +58,32 @@
 </div>
 
 @code {
-    private string? Filter { get; set; }
+    private string? FileId { get; set; }
+    private string? FileName { get; set; }
+    private string? BucketName { get; set; }
+
+    private FileInfomationQueryFilter Filter { get; set; } = new() { IncludeBucket = true };
+
+    private string GetRowClass(FileInformation file)=> "hover:bg-base-300";
 
     private void UpdateFilter()
     {
-        var queryable = string.IsNullOrWhiteSpace(Filter)
-        ? FileStorageStore.Source
-        : FileStorageStore.Source.Where(Filter);
+        Filter = new FileInfomationQueryFilter
+        {
+            FileId = FileId,
+            FileName = FileName,
+            BucketName = BucketName,
+            IncludeBucket = true
+        };
     }
 
     private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
-    private IQueryable<StorageBucket>? Buckets { get; set; }
-    private IQueryable<FileInformation>? Files { get; set; }
 
     public async ValueTask<GridItemsProviderResult<FileInformation>> GetFiles(GridItemsProviderRequest<FileInformation>
     request)
     {
-        var filter = new FileInfomationQueryFilter
-        {
-            FileId = null,
-            FileName = null,
-            BucketName = null,
-            IncludeBucket = true
-        };
 
-
-        var result = await FileStorageStore.ExecutePageAsync(filter, new PageQuery(pagination.CurrentPageIndex,
+        var result = await FileStorageStore.ExecutePageAsync(Filter, new PageQuery(pagination.CurrentPageIndex,
         pagination.ItemsPerPage)
         );
 
