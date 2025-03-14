@@ -35,6 +35,8 @@
   {
     currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
     NavigationManager.LocationChanged += OnLocationChanged;
+
+    Console.WriteLine("Avatar initialized");
   }
 
   private void OnLocationChanged(object? sender, LocationChangedEventArgs e)

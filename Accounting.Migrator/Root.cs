@@ -15,23 +15,7 @@ namespace Accounting.Migrator
             this.AddCommand(new ListCommand());
             this.AddCommand(new UpdateCommand());
             this.AddCommand(new DropCommand());
-        }
-
-        static DbContext BuildDbContext(string? connectionName)
-        {
-            var configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            configurationBuilder.AddUserSecrets<Root>();
-            configurationBuilder.AddEnvironmentVariables(prefix: "Accounting_");
-
-            var configuration = configurationBuilder.Build();
-
-            var factory = new DesignTimeDbContextFactory(configuration);
-
-            return factory.CreateDbContext(new DesignTimeDbContextFactory.FactoryOptions
-            {
-                ConnectionString = configuration.GetConnectionString(connectionName ?? "Default")
-            });
+            this.AddCommand(new UserCommand());
         }
 
         public class ListCommand : Command
@@ -54,7 +38,7 @@ namespace Accounting.Migrator
                 var pending = context.ParseResult.GetValueForOption(PendingOption);
                 var noConnect = context.ParseResult.GetValueForOption(NoConnectOption);
 
-                var db = BuildDbContext(connectionName);
+                var db = Helper.BuildDbContext(connectionName);
 
                 if (noConnect)
                 {
@@ -103,7 +87,7 @@ namespace Accounting.Migrator
 
                 var target = context.ParseResult.GetValueForOption(TargetOption);
 
-                var db = BuildDbContext(connectionName);
+                var db = Helper.BuildDbContext(connectionName);
 
                 await db.Database.MigrateAsync(target, context.GetCancellationToken());
 
@@ -124,7 +108,7 @@ namespace Accounting.Migrator
             {
                 var connectionName = context.ParseResult.GetValueForOption(GlobalOptions.ConnectionNameOption);
 
-                var db = BuildDbContext(connectionName);
+                var db = Helper.BuildDbContext(connectionName);
 
                 await db.Database.EnsureDeletedAsync(context.GetCancellationToken());
 

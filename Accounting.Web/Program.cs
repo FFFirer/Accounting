@@ -37,6 +37,7 @@ builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
+builder.Services.AddAntiforgery(options => {  });
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = IdentityConstants.ApplicationScheme;
@@ -103,20 +104,18 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAntiforgery();
-
 app.MapStaticAssets();
 
-app.UseAuthentication();
+app.UseRouting();
+
+app.UseAuthentication();    // 在UseRouting和UseEndpoints之间
 app.UseAuthorization();
+
+app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.MapAdditionalIdentityEndpoints();
 
-// Console.WriteLine("Hello world");
-
 app.Run();
-
-// Console.WriteLine("Hello world2");
