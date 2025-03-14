@@ -4,7 +4,11 @@ using System.Security.Claims;
 using Accounting.Data;
 
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
+using Org.BouncyCastle.Math.EC.Rfc7748;
 
 namespace Accounting.FileStorage;
 
@@ -19,15 +23,22 @@ public class FileSystemFileStorageService : IFileStorageService, IFileUploadServ
     protected virtual ErrorDescriptions Errors { get; set; }
 
     protected virtual IFileStorageStore FileStorageStore { get; set; }
+    protected virtual ILogger _logger { get; set; }
+
+    protected IHostEnvironment _environment { get; set; }
 
     public FileSystemFileStorageService(
         IFileStorageStore fileStorageStore,
         IOptions<FileStorageOptions> options,
+        IHostEnvironment environment,
+        ILogger<FileSystemFileStorageService> logger,
         ErrorDescriptions? descriptions = null)
     {
         this.FileStorageStore = fileStorageStore;
         this.Options = options;
         this.Errors = descriptions ?? new ErrorDescriptions();
+        this._environment = environment;
+        this._logger = logger;
     }
 
     public Task<string> GetUploadTokenAsync(string? bucketName = "Default", CancellationToken cancellationToken = default)
@@ -35,12 +46,18 @@ public class FileSystemFileStorageService : IFileStorageService, IFileUploadServ
         Validate();
 
         var fileId = Guid.NewGuid().ToString();
+        List<Claim> claims = [new Claim(TokenDefaults.UploadFileId, fileId)];
+        if (string.IsNullOrWhiteSpace(bucketName) == false)
+        {
+            claims.Add(new Claim(TokenDefaults.BucketName, bucketName));
+        }
+
         var token = JwtUtils.GenerateToken(
             Options.Value.FileSystemSecret,
             TokenDefaults.Issuer,
             TokenDefaults.Audience,
             Options.Value.UploadTokenExpirationMinutes,
-            [new Claim(TokenDefaults.UploadFileId, fileId), new Claim(TokenDefaults.BucketName, bucketName)]);
+            claims);
 
         return Task.FromResult(token);
     }
@@ -85,7 +102,7 @@ public class FileSystemFileStorageService : IFileStorageService, IFileUploadServ
             return Result.Failed(Errors.NotExistsUploadFileId());
         }
 
-        var saveDirectory = Path.Combine(Options.Value.FileSystemPhysicalPath, fileId);
+        var saveDirectory = ResolveSaveDirectory(Options.Value.FileSystemPhysicalPath);
         var tempFileName = Path.GetRandomFileName();
 
         var upload = new FileUploadOptions();
@@ -102,11 +119,6 @@ public class FileSystemFileStorageService : IFileStorageService, IFileUploadServ
 
         MergeUploadOptions(fileInfo, upload);
 
-        if (Directory.Exists(saveDirectory) == false)
-        {
-            Directory.CreateDirectory(saveDirectory);
-        }
-
         using (var fs = new FileStream(fileInfo.StoragePath, FileMode.Create))
         {
             await uploadFile.OpenReadStream(maxAllowedSize: Options.Value.MaxFileSize).CopyToAsync(fs, cancellationToken);
@@ -117,11 +129,51 @@ public class FileSystemFileStorageService : IFileStorageService, IFileUploadServ
             var bucket = await FileStorageStore.GetOrCreateBucketAsync(bucketName, cancellationToken);
             fileInfo.Bucket = bucket;
         }
-        
+
         await FileStorageStore.CreateAsync(fileInfo, cancellationToken);
         await UpdateSavedFileInfo(fileInfo);
 
         return Result.Success();
+    }
+
+    private string ResolveSaveDirectory(string path)
+    {
+        var directory = Path.IsPathRooted(path)
+        ? Path.Combine(path)
+        : Path.Combine(AppContext.BaseDirectory, path);
+
+        if (Directory.Exists(directory) == false)
+        {
+            directory = Directory.CreateDirectory(directory).FullName;
+
+            _logger.LogInformation("Created! FileStorageDirectory: {Path}", directory);
+        }
+
+        return directory;
+    }
+
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var file = await FileStorageStore.FindByIdAsync(id, cancellationToken);
+
+        if (file is null || file.Deleted)
+        {
+            return;
+        }
+
+        file.Deleted = true;
+
+        await FileStorageStore.UpdateAsync(file, cancellationToken);
+        
+        // TODO: EmitEvent FileDeleted
+
+        if (file.DeleteWhenExpired)
+        {
+            if (File.Exists(file.StoragePath))
+            {
+                File.Delete(file.StoragePath);
+            }
+        }
     }
 
     private Task UpdateSavedFileInfo(FileInformation fileInfo)
@@ -174,21 +226,7 @@ public class FileSystemFileStorageService : IFileStorageService, IFileUploadServ
     {
         var fileId = Guid.Parse(id);
 
-        var file = await FileStorageStore.FindByIdAsync(fileId, cancellationToken);
-
-        if (file is null)
-        {
-            return;
-        }
-
-        if (file.Deleted)
-        {
-            return;
-        }
-
-        file.Deleted = true;
-
-        await FileStorageStore.UpdateAsync(file, cancellationToken);
+        await DeleteAsync(fileId, cancellationToken);
     }
 
     private class TokenDefaults

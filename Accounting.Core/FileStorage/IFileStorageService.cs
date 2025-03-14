@@ -19,7 +19,8 @@ public interface IFileUploadService
 public interface IFileStorageService
 {
     Task UpdateAsync(string id, Action<FileUploadOptions> options, CancellationToken cancellationToken);
-    Task DeleteAsync(string id, CancellationToken cancellationToken);
+    // Task DeleteAsync(string id, CancellationToken cancellationToken);
+    Task DeleteAsync(Guid id, CancellationToken cancellationToken);
 
 }
 

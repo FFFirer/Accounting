@@ -2,11 +2,13 @@
 @using Accounting.Data
 @using Accounting.FileStorage
 @using System.Linq.Dynamic.Core
+@using Microsoft.AspNetCore.Mvc
 @using Microsoft.EntityFrameworkCore
 
 @implements IAsyncDisposable
 
 @inject IFileStorageStore FileStorageStore
+@inject IServiceProvider ServiceProvider
 
 <div class="size-full flex flex-1 flex-col">
     <div class="flex flex-row mb-2 gap-2">
@@ -29,6 +31,15 @@
             <TemplateColumn Context="file" Title="File">
                 <div class="font-bold">@file.OriginalFileName</div>
                 <div class="text-sm opacity-50">@file.Id</div>
+            </TemplateColumn>
+            <TemplateColumn Context="file">
+                <form method="post" @onsubmit="DeleteFile" @formname="@("delete-"+file.Id.ToString())">
+                    <AntiforgeryToken />
+                    <input type="hidden" value="@file.Id" id="DeleteFileInput.FileId" name="DeleteFileInput.FileId" />
+                    <button type="submit" class="btn btn-sm btn-warning btn-square">
+                        <Trash2Icon></Trash2Icon>
+                    </button>
+                </form>
             </TemplateColumn>
             <TemplateColumn class="text-nowrap" Context="file" Title="Tags">
                 @if (file.Tags != null && file.Tags.Count > 0)
@@ -64,7 +75,10 @@
 
     private FileInfomationQueryFilter Filter { get; set; } = new() { IncludeBucket = true };
 
-    private string GetRowClass(FileInformation file)=> "hover:bg-base-300";
+    [SupplyParameterFromForm]
+    private DeleteFileModel? DeleteFileInput { get; set; }
+
+    private string GetRowClass(FileInformation file) => "hover:bg-base-300";
 
     private void UpdateFilter()
     {
@@ -79,6 +93,20 @@
 
     private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
 
+    public async Task DeleteFile()
+    {
+        if (DeleteFileInput?.FileId is null)
+        {
+            return;
+        }
+
+        using (var serviceScope = ServiceProvider.CreateAsyncScope())
+        {
+            var service = serviceScope.ServiceProvider.GetRequiredService<IFileStorageService>();
+            await service.DeleteAsync(DeleteFileInput.FileId, CancellationToken.None);
+        }
+    }
+
     public async ValueTask<GridItemsProviderResult<FileInformation>> GetFiles(GridItemsProviderRequest<FileInformation>
     request)
     {
@@ -89,11 +117,15 @@
 
         return new GridItemsProviderResult<FileInformation>
         {
-            Items = result.Datas,
-            TotalItemCount = result.TotalCount
+            TotalItemCount = result.TotalCount,
+            Items = result.Datas
         };
     }
 
+    private class DeleteFileModel
+    {
+        public Guid FileId { get; set; }
+    }
 
     public async ValueTask DisposeAsync() => await FileStorageStore.DisposeAsync();
 }
