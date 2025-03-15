@@ -5,9 +5,11 @@
     <div class="navbar-center flex flex-row justify-center">
         <AuthorizeView>
             <Authorized>
-                <NavLink class="btn btn-ghost" ActiveClass="btn-active" href="/Dashboard">仪表板</NavLink>
-                <NavLink class="btn btn-ghost" ActiveClass="btn-active" href="/Books">账本管理</NavLink>
-                <NavLink class="btn btn-ghost" ActiveClass="btn-active" href="/FinancialServiceProviders">金融渠道</NavLink>
+                <ul class="menu menu-horizontal py-0">
+                    <li><NavLink ActiveClass="menu-active" href="/Dashboard">仪表板</NavLink></li>
+                    <li><NavLink ActiveClass="menu-active" href="/Books">账本管理</NavLink></li>
+                    <li><NavLink ActiveClass="menu-active" href="/FinancialServiceProviders">金融渠道</NavLink></li>
+                </ul>
             </Authorized>
         </AuthorizeView>
     </div>
