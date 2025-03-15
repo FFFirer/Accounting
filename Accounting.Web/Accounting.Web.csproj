@@ -14,10 +14,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Accounting.Core\Accounting.Core.csproj" />
     <ProjectReference Include="..\Accounting.Stores\Accounting.Stores.csproj" />
+    <ProjectReference Include="..\Accounting.Web.Client\Accounting.Web.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="Serilog.Sinks.Console" />
   </ItemGroup>
