@@ -12,6 +12,8 @@ public class LedgerRecordAttachment
         LastModifiedTime = DateTimeOffset.UtcNow;
     }
 
+    public long Id {get;set;}
+
     public FileInformation File { get; set; }
 
     public DateTimeOffset CreatedTime { get; set; }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using Accounting.Asset;
+using Accounting.Books;
 using Accounting.Documents;
 using Accounting.FileStorage;
 
@@ -21,6 +23,13 @@ namespace Accounting
         public DbSet<Document<SiteSettings>> SiteSettings => Set<Document<SiteSettings>>();
         public DbSet<FileInformation> FileInformations => Set<FileInformation>();
         public DbSet<StorageBucket> StorageBuckets => Set<StorageBucket>();
+
+        public DbSet<AssetAccount> AssetAccounts => Set<AssetAccount>();
+        public DbSet<Ledger> Ledgers => Set<Ledger>();
+        public DbSet<LedgerRecord> LedgerRecords => Set<LedgerRecord>();
+        public DbSet<LedgerCategory> LedgerCategories => Set<LedgerCategory>();
+        public DbSet<LedgerTag> LedgerTags => Set<LedgerTag>();
+        public DbSet<LedgerRecordAttachment> LedgerRecordAttachments => Set<LedgerRecordAttachment>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
