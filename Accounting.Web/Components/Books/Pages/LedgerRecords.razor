@@ -1,0 +1,81 @@
+﻿@page "/Ledger/{LedgerId}/Records"
+@using Accounting.Books
+@using Microsoft.AspNetCore.Mvc
+@using Microsoft.EntityFrameworkCore
+
+@inject AccountingDbContext AccountingDb
+
+<div class="size-full flex flex-1 flex-col">
+
+    <div class="flex flex-row mb-2 gap-2">
+        <button type="button" class="btn btn-primary" @onclick="UpdateFilter">
+            <SearchIcon></SearchIcon>
+            查询
+        </button>
+        <NavLink href="@("/Ledgers/"+ LedgerId +"/Records/Create")" class="btn">
+            <PlusIcon />
+            记账
+        </NavLink>
+    </div>
+
+    <div class="grow overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+        <QuickGrid class="table" TGridItem="LedgerRecord" ItemsProvider="GetLedgerRecords">
+            <PropertyColumn Property="p => p.RecordTime" Format="yyyy-MM-dd HH:mm:ss"></PropertyColumn>
+            <TemplateColumn Context="record">
+                @(record.FlowDirection == Asset.AssetFlowDirection.Expenditure ? "支出" : "收入")
+            </TemplateColumn>
+            <PropertyColumn Property="p => p.Amount" Format="F2"></PropertyColumn>
+            <PropertyColumn Property="p => p.CreatedTime" Format="yyyy-MM-dd HH:mm:ss"></PropertyColumn>
+        </QuickGrid>
+    </div>
+    <Paginator State="pagination" />
+</div>
+
+@code {
+    [Parameter]
+    public string? LedgerId { get; set; }
+
+
+    public async Task UpdateFilter()
+    {
+        await pagination.SetCurrentPageIndexAsync(1);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await pagination.SetCurrentPageIndexAsync(1);
+    }
+
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    private string GetRowClass(Ledger file) => "hover:bg-base-300";
+
+    public async ValueTask<GridItemsProviderResult<LedgerRecord>> GetLedgerRecords(GridItemsProviderRequest<LedgerRecord>
+    request)
+    {
+        if (Guid.TryParse(LedgerId, out var id) == false)
+        {
+            return new GridItemsProviderResult<LedgerRecord>
+            {
+                TotalItemCount = 0,
+                Items = []
+            };
+        }
+
+        var query = AccountingDb.LedgerRecords.AsNoTracking();
+
+        var totalCount = await query.CountAsync();
+
+        query = query.DoPage(new PageQuery(pagination.CurrentPageIndex, pagination.ItemsPerPage));
+
+        var items = await query.ToListAsync();
+
+        var result = new GridItemsProviderResult<LedgerRecord>
+        {
+            TotalItemCount = totalCount,
+            Items = items
+        };
+
+        return result;
+    }
+
+}

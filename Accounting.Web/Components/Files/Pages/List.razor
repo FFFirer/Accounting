@@ -37,7 +37,7 @@
             <TemplateColumn Context="file">
                 @if (file.Deleted == false)
                 {
-                    <form method="post" @onsubmit="DeleteFile" @formname="@("delete-"+file.Id.ToString())">
+                    <form method="post" @onsubmit="DeleteFile" @formname="@("delete-" + file.Id.ToString())">
                         <AntiforgeryToken />
                         <input type="hidden" value="@file.Id" id="DeleteFileInput.FileId" name="DeleteFileInput.FileId" />
                         <button type="submit" class="btn btn-sm btn-warning btn-square">

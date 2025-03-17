@@ -1,0 +1,70 @@
+﻿@page "/Ledgers"
+
+@using Accounting.Books
+@using Microsoft.EntityFrameworkCore
+
+@inject AccountingDbContext AccountingDb
+
+<PageTitle>账本管理 - 所有账本</PageTitle>
+
+<div class="size-full flex flex-1 flex-col">
+    <div class="flex flex-row mb-2 gap-2">
+        <button type="button" class="btn btn-primary" @onclick="UpdateFilter">
+            <SearchIcon></SearchIcon>
+            查询
+        </button>
+        <NavLink href="/Ledgers/Create" class="btn">
+            <PlusIcon />
+            新建账本
+        </NavLink>
+    </div>
+
+    <div class="grow overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+        <QuickGrid class="table" TGridItem="Ledger" ItemsProvider="GetLedgers">
+            <PropertyColumn Property="p => p.Name"></PropertyColumn>
+            <PropertyColumn Property="p => p.CreatedTime" Format="yyyy-MM-dd HH:mm:ss"></PropertyColumn>
+            <TemplateColumn Context="ledger">
+                <NavLink href="@("/Ledger/" + ledger.Id.ToString() + "/Records")" class="btn btn-link">
+                    <SearchIcon />
+                    查看
+                </NavLink>
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
+    <Paginator State="pagination" />
+</div>
+
+@code {
+
+    public async Task UpdateFilter()
+    {
+        await pagination.SetCurrentPageIndexAsync(1);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await pagination.SetCurrentPageIndexAsync(1);
+    }
+
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    private string GetRowClass(Ledger file) => "hover:bg-base-300";
+
+    public async ValueTask<GridItemsProviderResult<Ledger>> GetLedgers(GridItemsProviderRequest<Ledger> request)
+    {
+        var query = AccountingDb.Ledgers.AsNoTracking();
+
+        var totalCount = await query.CountAsync();
+
+        query = query.DoPage(new PageQuery(pagination.CurrentPageIndex, pagination.ItemsPerPage));
+
+        var items = await query.ToListAsync();
+
+        var result = new GridItemsProviderResult<Ledger>
+        {
+            TotalItemCount = totalCount,
+            Items = items
+        };
+
+        return result;
+    }
+}

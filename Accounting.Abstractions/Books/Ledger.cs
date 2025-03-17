@@ -9,6 +9,7 @@ public class Ledger
     public Ledger()
     {
         Id = Guid.NewGuid();
+        CreatedTime = DateTimeOffset.UtcNow;
     }
 
     public Guid Id { get; set; }

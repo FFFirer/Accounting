@@ -1,8 +1,71 @@
-@page "/Books/Create"
+@page "/Ledgers/Create"
+@using System.ComponentModel.DataAnnotations
+@using Accounting.Books
+@rendermode InteractiveServer
 
-<PageTitle>新建账本</PageTitle>
+@inject AccountingDbContext AccountingDb
+@inject NavigationManager NavigationManager
 
-<h1>新建账本</h1>
+<PageTitle>账本管理 - 新建</PageTitle>
+
+<Alert Message="@Message"></Alert>
+
+<EditForm Model="Input" FormName="create-ledger" method="post" OnValidSubmit="CreateLedger">
+    <DataAnnotationsValidator />
+
+    <fieldset class="fieldset mb-3">
+        <legend class="fieldset-legend">账本名称</legend>
+        <InputText class="input" @bind-Value="Input.Name"></InputText>
+    </fieldset>
+    <ValidationMessage For="() => Input.Name" class="text-warning" />
+
+    <fieldset class="fieldset mb-3">
+        <legend class="fieldset-legend">月初起始日</legend>
+        <InputNumber class="input" @bind-Value="Input.MonthStartDay" />
+        <p class="fieldset-label">取值范围：1 ~ 31</p>
+    </fieldset>
+    <ValidationMessage For="() => Input.MonthStartDay" class="text-warning" />
+
+
+    <div class=" mt-2">
+        <button type="submit" class="btn btn-primary">提交</button>
+        <NavLink href="/Ledgers" class="btn btn-link">查看所有账本</NavLink>
+    </div>
+</EditForm>
 
 @code {
+
+    public string? Message { get; set; }
+
+    [SupplyParameterFromForm]
+    private CreateLedgerModel Input { get; set; } = new();
+
+    public async Task CreateLedger()
+    {
+        var ledger = new Ledger()
+        {
+            Name = Input.Name,
+            MonthStartDay = Input.MonthStartDay
+        };
+
+        AccountingDb.Add(ledger);
+
+        await AccountingDb.SaveChangesAsync();
+
+        // TODO: navigate to ledger list
+
+        Message = "创建成功";
+        Input = new();
+
+        NavigationManager.NavigateTo("/Ledgers");
+    }
+
+    private class CreateLedgerModel
+    {
+        [Required(AllowEmptyStrings = false)]
+        public string? Name { get; set; }
+
+        [Required]
+        public int MonthStartDay { get; set; } = 1;
+    }
 }
