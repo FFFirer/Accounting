@@ -33,7 +33,7 @@ namespace Accounting
 
             builder.ApplyConfiguration(new JsonDocumentEntityConfiguration<SiteSettings>(documentEntity));
 
-            builder.ApplyConfiguration(new StorageBucketEntityConfiguration());
+            builder.ApplyConfigurationsFromAssembly(typeof(AccountingDbContext).Assembly);
 
             builder.Entity<FileInformation>().HasOne(f => f.Bucket);
         }
