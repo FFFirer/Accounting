@@ -10,5 +10,6 @@ public class LedgerTagEntityConfiguration : IEntityTypeConfiguration<LedgerTag>
     public void Configure(EntityTypeBuilder<LedgerTag> builder)
     {
         builder.HasKey(x => x.Id);
+        builder.HasIndex(x => new { x.Name, x.LedgerId }).IsUnique();
     }
 }

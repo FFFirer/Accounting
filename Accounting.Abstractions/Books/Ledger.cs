@@ -6,6 +6,11 @@ namespace Accounting.Books;
 
 public class Ledger
 {
+    public Ledger()
+    {
+        Id = Guid.NewGuid();
+    }
+
     public Guid Id { get; set; }
     public string? Name { get; set; }
     public DateTimeOffset CreatedTime { get; set; }

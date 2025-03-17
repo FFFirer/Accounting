@@ -10,5 +10,6 @@ public class LedgerCategoryEntityConfiguration : IEntityTypeConfiguration<Ledger
     public void Configure(EntityTypeBuilder<LedgerCategory> builder)
     {
         builder.HasKey(x => x.Id);
+        builder.HasIndex(x => new { x.Name, x.LedgerId }).IsUnique();
     }
 }

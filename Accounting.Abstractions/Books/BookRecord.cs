@@ -14,7 +14,7 @@ public class BookRecord
         this.RecordTime = recordTime;
 
         this.CreatedTime = DateTimeOffset.UtcNow;
-        this.LastModifiedTime = DateTimeOffset.UtcNow
+        this.LastModifiedTime = DateTimeOffset.UtcNow;
     }
 
     public string Id { get; set; }
