@@ -2,6 +2,7 @@
     "recommendations": [
         "ms-dotnettools.csharp",
         "ms-dotnettools.csdevkit",
-        "bradlc.vscode-tailwindcss"
+        "bradlc.vscode-tailwindcss",
+        "hediet.vscode-drawio"
     ]
 }
