@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="flex size-full h-[100vh] flex-col">
-    <Navbar />
+    <Navbar Navs="@([new("#", "任务定义"), new("#", "任务实例"), new("#", "任务日志")])" />
 
     <div class="flex-1 p-2">
         @Body

@@ -1,0 +1,50 @@
+﻿<div class="navbar bg-base-100 shadow-sm">
+    <div class="navbar-start">
+        <NavLink href="/" class="btn btn-ghost text-xl">Accounting</NavLink>
+    </div>
+    <div class="navbar-center flex flex-row justify-center">
+        <AuthorizeView>
+            <Authorized>
+                <ul class="menu menu-horizontal py-0">
+                    @* <li>
+                        <NavLink ActiveClass="menu-active" href="/Dashboard">仪表板</NavLink>
+                    </li>
+                    <li>
+                        <NavLink ActiveClass="menu-active" href="/Ledgers">账本管理</NavLink>
+                    </li>
+                    <li>
+                        <NavLink ActiveClass="menu-active" href="/AssetAccounts">资产账户</NavLink>
+                    </li> *@
+
+                    @if (this.Navs is not null && this.Navs.Count > 0)
+                    {
+                        foreach (var nav in this.Navs)
+                        {
+                            <li>
+                                <NavLink ActiveClass="menu-active" href="@nav.Path">@nav.Name</NavLink>
+                            </li>
+                        }
+                    }
+                </ul>
+            </Authorized>
+        </AuthorizeView>
+    </div>
+    <div class="navbar-end gap-2">
+        <ThemeSwitch />
+
+        <AuthorizeView>
+            <Authorized>
+                <Avatar />
+            </Authorized>
+            <NotAuthorized>
+                <NavLink class="btn btn-link px-0" href="/Account/Login">登录</NavLink>
+                <NavLink class="btn btn-link px-0" href="/Account/Register">注册</NavLink>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public ICollection<NavModel>? Navs { set; get; }
+}
