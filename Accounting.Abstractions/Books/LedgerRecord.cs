@@ -21,7 +21,7 @@ public class LedgerRecord
 
     public long Id { get; set; }
     public Ledger Ledger { get; set; } = default!;
-    public LedgerCategory Category { get; set; } = default!;
+    public LedgerCategory? Category { get; set; }
     public ICollection<LedgerTag>? Tags { get; set; }
 
     public DateTimeOffset RecordTime { get; set; }
