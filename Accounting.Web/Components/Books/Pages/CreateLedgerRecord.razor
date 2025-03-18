@@ -1,10 +1,55 @@
 ﻿@page "/Ledgers/{LedgerId}/Records/Create"
+@using Accounting.Asset
+@rendermode InteractiveServer
 
 <PageTitle>账本管理 - 记账</PageTitle>
 
-<h3>CreateLedgerRecord</h3>
+@if (this.Ledger is null)
+{
+    <NavLink class="btn btn-ghost" href="/Ledgers/Pick/To/Records/Create">去选择账本</NavLink>
+}
+else
+{
+    <EditForm Model="Input" FormName="create-ledger-record" OnValidSubmit="SubmitCreateLedgerRecord">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
 
-@code {
-    [Parameter]
-    public string? LedgerId { get; set; }
+        <fieldset class="fieldset mb-3">
+            <legend class="text-base fieldset-legend">账本
+                <NavLink class="btn btn-link text-xs" href="/Ledgers/Pick/To/Records/Create ">重新选择</NavLink>
+            </legend>
+            <InputText disabled class="input disabled" @bind-Value="Ledger.Name"></InputText>
+        </fieldset>
+        <fieldset class="fieldset mb-3">
+            <legend class="text-base fieldset-legend">流向</legend>
+            <InputSelect @bind-Value="Input.FlowDirection" class="input">
+                <option>请选择...</option>
+                <option value="@AssetFlowDirection.Expenditure">支出</option>
+                <option value="@AssetFlowDirection.Revenue">收入</option>
+            </InputSelect>
+            <ValidationMessage For="() => Input.FlowDirection" class="text-warning"></ValidationMessage>
+        </fieldset>
+        <fieldset class="fieldset mb-3">
+            <legend class="text-base fieldset-legend">日期</legend>
+            <InputDate @bind-Value="Input.RecordTime" class="input"></InputDate>
+
+            <ValidationMessage For="() => Input.RecordTime" class="text-warning"></ValidationMessage>
+        </fieldset>
+        <fieldset class="fieldset mb-3">
+            <legend class="text-base fieldset-legend">金额</legend>
+            <InputNumber @bind-Value="Input.Amount" step="0.01" min="0" class="input"></InputNumber>
+
+            <ValidationMessage For="() => Input.Amount" class="text-warning"></ValidationMessage>
+        </fieldset>
+        <fieldset class="fieldset mb-3">
+
+            <legend class="text-base fieldset-legend">备注</legend>
+            <InputText @bind-Value="Input.Remark" class="input"></InputText>
+
+            <ValidationMessage For="() => Input.Remark" class="text-warning"></ValidationMessage>
+        </fieldset>
+
+        <div class="flex flex-row">
+            <button type="submit" class="btn btn-primary">确认</button>
+        </div>
+    </EditForm>
 }

@@ -7,6 +7,8 @@ namespace Accounting.Books;
 
 public class LedgerRecord
 {
+    public LedgerRecord() : this(DateTimeOffset.UtcNow, 0) { }
+
     public LedgerRecord(
         DateTimeOffset recordTime,
         decimal amount)

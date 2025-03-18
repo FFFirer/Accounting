@@ -12,8 +12,9 @@
 
 <EditForm Model="Input" FormName="create-ledger" method="post" OnValidSubmit="CreateLedger">
     <DataAnnotationsValidator />
-
     <fieldset class="fieldset mb-3">
+        @* <legend class="fieldset-legend">账本名称</legend> *@
+
         <legend class="fieldset-legend">账本名称</legend>
         <InputText class="input" @bind-Value="Input.Name"></InputText>
     </fieldset>

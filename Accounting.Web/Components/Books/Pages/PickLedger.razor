@@ -1,13 +1,29 @@
 ﻿@page "/Ledgers/Pick/To/{**ContinuePath}"
 @using Microsoft.AspNetCore.Mvc
+@using Accounting.Books
+@rendermode InteractiveServer
 
-<h3>PickLedger</h3>
-
-<NavLink>Goto</NavLink>
-
-@code {
-    [Parameter]
-    public string? ContinuePath {get;set;}
-}
-   
-    
+<ul class="list bg-base-100 rounded-box shadow-md ">
+    <li class="p-4 pb-2">选择一个账本</li>
+    @if (Ledgers.IsNullOrEmpty())
+    {
+        <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">No more ledgers.</li>
+    }
+    else
+    {
+        foreach (var ledger in Ledgers)
+        {
+            <li class="list-row">
+                <div class="list-col-grow">
+                    <NavLink href="@GetNavLinkUrl(ledger)" class="w-full flex flex-row btn btn-square btn-ghost px-2">
+                        <div class="grow text-left">
+                            <div>@ledger.Name</div>
+                            <div class="text-xs uppercase opacity-60">@ledger.CreatedTime.ToString("yyyy-MM-dd") 创建</div>
+                        </div>
+                        <PlusIcon />
+                    </NavLink>
+                </div>
+            </li>
+        }
+    }
+</ul>
