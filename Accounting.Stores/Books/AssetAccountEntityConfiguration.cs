@@ -12,5 +12,7 @@ public class AssetAccountEntityConfiguration : IEntityTypeConfiguration<AssetAcc
     public void Configure(EntityTypeBuilder<AssetAccount> builder)
     {
         builder.HasKey(x => x.Id);
+
+        builder.Property(x => x.Type).HasMaxLength(100).IsRequired();
     }
 }

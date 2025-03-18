@@ -4,6 +4,8 @@
 
 <PageTitle>账本管理 - 记账</PageTitle>
 
+<Alert Message="@ErrorMessage"></Alert>
+
 @if (this.Ledger is null)
 {
     <NavLink class="btn btn-ghost" href="/Ledgers/Pick/To/Records/Create">去选择账本</NavLink>

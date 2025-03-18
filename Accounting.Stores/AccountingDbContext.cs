@@ -39,6 +39,7 @@ namespace Accounting
             // 自动处理时区转换
             configurationBuilder.Properties<DateTime>().HaveConversion<DateTimeUtcConverter>();
             configurationBuilder.Properties<DateTimeOffset>().HaveConversion<DateTimeOffsetUtcConverter>();
+            configurationBuilder.Properties<AssetAccountType>().HaveConversion<EnumStringValueConverter<AssetAccountType>>();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

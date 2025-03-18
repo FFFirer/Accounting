@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Components\AssetAccounts\" />
     <Folder Include="wwwroot\lib\" />
     <Folder Include="wwwroot\frontend\" />
   </ItemGroup>

@@ -1,0 +1,35 @@
+﻿@using Accounting.Asset
+<PageTitle>资产账户 - 新建</PageTitle>
+
+<EditForm Model="Input" FormName="create-asset-account" OnValidSubmit="SubmitCreate">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+
+    <fieldset class="fieldset mb-3">
+        <legend class="text-base fieldset-legend">类型</legend>
+        <InputSelect @bind-Value="Input.Type" class="input" id="Input.Type">
+            <option value="@AssetAccountType.Fund">资金账户</option>
+            <option value="@AssetAccountType.Credit">信用账户</option>
+            <option value="@AssetAccountType.Recharge">充值账户</option>
+            <option value="@AssetAccountType.Investment">投资账户</option>
+            <option value="@AssetAccountType.Debt">债务账户</option>
+        </InputSelect>
+        <ValidationMessage For="() => Input.Type" class="text-warning"></ValidationMessage>
+    </fieldset>
+
+    <fieldset class="fieldset mb-3">
+        <legend class="text-base fieldset-legend">名称</legend>
+        <InputText @bind-Value="Input.Name" class="input" id="Input.Name"></InputText>
+        <ValidationMessage For="() => Input.Name" class="text-warning"></ValidationMessage>
+    </fieldset>
+    
+    <fieldset class="fieldset mb-3">
+        <legend class="text-base fieldset-legend">图标</legend>
+        <InputText @bind-Value="Input.Icon" class="input" id="Input.Icon"></InputText>
+        <ValidationMessage For="() => Input.Icon" class="text-warning"></ValidationMessage>
+    </fieldset>
+
+    <div class="flex flex-row">
+        <button type="submit" class="btn btn-primary">确认</button>
+        <NavLink class="btn btn-link" href="@($"/AssetAccounts")">全部资产账户</NavLink>
+    </div>
+</EditForm>
