@@ -1,12 +1,18 @@
-﻿@using Accounting.Asset
-<PageTitle>资产账户 - 新建</PageTitle>
+﻿@page "/AssetAccounts/Create"
+@rendermode InteractiveServer
 
-<EditForm Model="Input" FormName="create-asset-account" OnValidSubmit="SubmitCreate">
+@using Accounting.Asset
+<PageTitle>资产账户 - 添加</PageTitle>
+
+<Alert Message="@Message"></Alert>
+
+<EditForm Model="Input" FormName="create-asset-account" method="post" OnValidSubmit="SubmitCreate">
     <DataAnnotationsValidator></DataAnnotationsValidator>
 
     <fieldset class="fieldset mb-3">
         <legend class="text-base fieldset-legend">类型</legend>
         <InputSelect @bind-Value="Input.Type" class="input" id="Input.Type">
+            <option>选择账户类型...</option>
             <option value="@AssetAccountType.Fund">资金账户</option>
             <option value="@AssetAccountType.Credit">信用账户</option>
             <option value="@AssetAccountType.Recharge">充值账户</option>
@@ -21,15 +27,26 @@
         <InputText @bind-Value="Input.Name" class="input" id="Input.Name"></InputText>
         <ValidationMessage For="() => Input.Name" class="text-warning"></ValidationMessage>
     </fieldset>
-    
+
     <fieldset class="fieldset mb-3">
         <legend class="text-base fieldset-legend">图标</legend>
         <InputText @bind-Value="Input.Icon" class="input" id="Input.Icon"></InputText>
         <ValidationMessage For="() => Input.Icon" class="text-warning"></ValidationMessage>
     </fieldset>
 
+    <div class="mb-3">
+        <label>
+            <InputCheckbox @bind-Value="Input.IncludedInTotalAssets" class="checkbox" id="Input.IncludedInTotalAssets">
+            </InputCheckbox>
+            <span class="text-base ms-2"> 包括在总资产中</span>
+        </label>
+        <ValidationMessage For="() => Input.IncludedInTotalAssets" class="text-warning"></ValidationMessage>
+    </div>
+
     <div class="flex flex-row">
         <button type="submit" class="btn btn-primary">确认</button>
         <NavLink class="btn btn-link" href="@($"/AssetAccounts")">全部资产账户</NavLink>
     </div>
+
+
 </EditForm>

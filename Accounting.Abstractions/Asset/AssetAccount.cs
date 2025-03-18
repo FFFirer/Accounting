@@ -15,6 +15,7 @@ public class AssetAccount
     {
         Id = id;
         Name = name;
+        CreatedTime = DateTimeOffset.UtcNow;
     }
 
     public string Id { get; set; }

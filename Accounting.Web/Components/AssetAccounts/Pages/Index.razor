@@ -1,7 +1,32 @@
 @page "/AssetAccounts"
+@using Accounting.Asset
+@using Accounting.Common;
 
 <PageTitle>资产账户</PageTitle>
 
-<h1>资产账户</h1>
+<div class="size-full flex flex-1 flex-col">
+    <div class="flex flex-row mb-2 gap-2">
+        <button type="button" class="btn btn-primary">
+            <SearchIcon></SearchIcon>
+            查询
+        </button>
+        <NavLink href="/AssetAccounts/Create" class="btn">
+            <PlusIcon />
+            添加资产账户
+        </NavLink>
+    </div>
 
-@code {}
+    <div class="grow overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+        <QuickGrid class="table" TGridItem="AssetAccount" ItemsProvider="GetAssetAccounts">
+            <PropertyColumn Property="p => p.Name"></PropertyColumn>
+            <TemplateColumn Context="type" Title="Type">
+                <span>@(type.Type?.GetDisplayName() ?? type.Type.ToString())</span>
+            </TemplateColumn>
+            <TemplateColumn Context="type" Title="Included in total assets">
+                <span>@(type.IncludedInTotalAssets ? "YES" : "NO")</span>
+            </TemplateColumn>
+            <PropertyColumn Property="p => p.CreatedTime" Format="yyyy-MM-dd HH:mm:ss"></PropertyColumn>
+        </QuickGrid>
+    </div>
+    <Paginator State="pagination" />
+</div>
