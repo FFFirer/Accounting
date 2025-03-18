@@ -6,6 +6,7 @@ using Accounting.Asset;
 using Accounting.Books;
 using Accounting.Documents;
 using Accounting.FileStorage;
+using Accounting.ValueConverters;
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -31,9 +32,20 @@ namespace Accounting
         public DbSet<LedgerTag> LedgerTags => Set<LedgerTag>();
         public DbSet<LedgerRecordAttachment> LedgerRecordAttachments => Set<LedgerRecordAttachment>();
 
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+            base.ConfigureConventions(configurationBuilder);
+
+            // 自动处理时区转换
+            configurationBuilder.Properties<DateTime>().HaveConversion<DateTimeUtcConverter>();
+            configurationBuilder.Properties<DateTimeOffset>().HaveConversion<DateTimeOffsetUtcConverter>();
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+
 
             var documentEntity = builder.Entity<Document>();
 

@@ -77,5 +77,7 @@ public partial class CreateLedgerRecord : ComponentBase
 
         AccountingDb.LedgerRecords.Add(ledgerRecord);
         await AccountingDb.SaveChangesAsync();
+
+        this.Input = new();
     }
 }

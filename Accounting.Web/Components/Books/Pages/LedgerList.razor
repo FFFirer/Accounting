@@ -28,7 +28,7 @@
             <PropertyColumn Property="p => p.Name"></PropertyColumn>
             <PropertyColumn Property="p => p.CreatedTime" Format="yyyy-MM-dd HH:mm:ss"></PropertyColumn>
             <TemplateColumn Context="ledger">
-                <NavLink href="@("/Ledger/" + ledger.Id.ToString() + "/Records")" class="btn btn-link">
+                <NavLink href="@("/Ledgers/" + ledger.Id.ToString() + "/Records")" class="btn btn-link">
                     <SearchIcon />
                     查看
                 </NavLink>
