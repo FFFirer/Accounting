@@ -2,11 +2,13 @@ using System;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 namespace Accounting.Web.Client.Layout;
 
 public partial class MainLayout : LayoutComponentBase, IAsyncDisposable
 {
+
     [Inject]
     private NavigationManager? NavigationManager { get; set; }
 

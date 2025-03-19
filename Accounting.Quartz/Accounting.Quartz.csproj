@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="AppAny.Quartz.EntityFrameworkCore.Migrations.PostgreSQL" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="Quartz.AspNetCore" />
     <PackageReference Include="Quartz.Extensions.Hosting" />
   </ItemGroup>
@@ -20,6 +19,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="Quartz.Serialization.SystemTextJson" />
   </ItemGroup>
   
   <ItemGroup>

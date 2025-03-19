@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Accounting.Quartz.Endpoints
+namespace Accounting.Quartz.Endpoints;
+
+public static class ScheduleEndpoints
 {
-    internal class ScheduleEndpoints
-    {
-    }
 }

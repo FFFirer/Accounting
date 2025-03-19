@@ -15,7 +15,7 @@ namespace Accounting
 {
     public class AccountingDbContext : IdentityDbContext<User>
     {
-        public AccountingDbContext(DbContextOptions options) : base(options)
+        public AccountingDbContext(DbContextOptions<AccountingDbContext> options) : base(options)
         {
         }
 

@@ -11,7 +11,7 @@ namespace Accounting.Quartz;
 
 public class AccountingQuartzDbContext : DbContext
 {
-    public AccountingQuartzDbContext(DbContextOptions options) : base(options)
+    public AccountingQuartzDbContext(DbContextOptions<AccountingQuartzDbContext> options) : base(options)
     {
     }
 

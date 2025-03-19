@@ -6,16 +6,6 @@
         <AuthorizeView>
             <Authorized>
                 <ul class="menu menu-horizontal py-0">
-                    @* <li>
-                        <NavLink ActiveClass="menu-active" href="/Dashboard">仪表板</NavLink>
-                    </li>
-                    <li>
-                        <NavLink ActiveClass="menu-active" href="/Ledgers">账本管理</NavLink>
-                    </li>
-                    <li>
-                        <NavLink ActiveClass="menu-active" href="/AssetAccounts">资产账户</NavLink>
-                    </li> *@
-
                     @if (this.Navs is not null && this.Navs.Count > 0)
                     {
                         foreach (var nav in this.Navs)
@@ -24,6 +14,13 @@
                                 <NavLink ActiveClass="menu-active" href="@nav.Path">@nav.Name</NavLink>
                             </li>
                         }
+                    }
+
+                    @if(this.Env?.Environment == "Development" )
+                    {
+                        <li>
+                            <NavLink ActiveClass="menu-active" href="/swagger">OpenAPI Docs</NavLink>
+                        </li>
                     }
                 </ul>
             </Authorized>

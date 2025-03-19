@@ -3,6 +3,7 @@
 using Mapster;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
@@ -10,13 +11,13 @@ namespace Accounting.Quartz.Endpoints;
 
 public static class JobEndpoints
 {
-    public static IEndpointRouteBuilder MapJobEndpoints(this IEndpointRouteBuilder endpoints)
+    public static IEndpointConventionBuilder MapJobEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        var endpointsGroup = endpoints.MapGroup("/Job");
+        var endpointsGroup = endpoints.MapGroup("/Job").WithTags("Job");
 
         endpointsGroup.MapGet("/Query", QueryJobs);
 
-        return endpoints;
+        return endpointsGroup;
     }
 
     private static async Task<PageList<JobDefinationDto>> QueryJobs([FromQuery] int page, [FromQuery]int size, [FromServices] JobIndexes indexes)

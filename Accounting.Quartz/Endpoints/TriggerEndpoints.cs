@@ -19,13 +19,13 @@ namespace Accounting.Quartz.Endpoints;
 
 public static class TriggerEndpoints
 {
-    public static IEndpointRouteBuilder MapTriggerEndpoints(this IEndpointRouteBuilder endpoints)
+    public static IEndpointConventionBuilder MapTriggerEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        var endpointsGroup = endpoints.MapGroup("/Trigger");
+        var endpointsGroup = endpoints.MapGroup("/Trigger").WithTags("Trigger");
 
         endpointsGroup.MapGet("/Query", QueryTriggers);
 
-        return endpoints;
+        return endpointsGroup;
     }
 
     private static async Task<PageList<TriggerDto>> QueryTriggers([FromQuery] int page, [FromQuery] int size, [FromServices] AccountingQuartzDbContext context, [FromServices] ICancellationTokenProvider cancellation)

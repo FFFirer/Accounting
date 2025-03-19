@@ -3,10 +3,12 @@ using Accounting.Common;
 using Accounting.Email;
 using Accounting.Quartz;
 using Accounting.Quartz.Endpoints;
+using Accounting.Web.Common;
 using Accounting.Web.Components;
 using Accounting.Web.Components.Account;
 
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +19,7 @@ using Quartz.Impl.AdoJobStore;
 using Serilog;
 
 const string DefaultConnectionName = "Default";
-const string QuartzConnectionName = nameof(Quartz);
+const string QuartzConnectionName = "Quartz";
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
@@ -32,13 +34,16 @@ builder.Services
 
 builder.Services
     .AddDbContext<AccountingQuartzDbContext>(
-        options => options.UseNpgsql(builder.Configuration.GetConnectionString(DefaultConnectionName))); 
+        options => options.UseNpgsql(builder.Configuration.GetConnectionString(QuartzConnectionName))); 
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents()
     .AddAuthenticationStateSerialization();
+
+builder.Services.AddOpenApiDocument();
+builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddLogging();
 builder.Services.AddScoped<ICancellationTokenProvider>(sp => new CancellationTokenProvider(sp.GetService<IHttpContextAccessor>()?.HttpContext?.RequestAborted));
@@ -73,11 +78,14 @@ builder.Services.AddQuartz(config =>
 {
     config.UsePersistentStore(p =>
     {
+        p.UseProperties = true;
         p.UsePostgres(postgresOptions =>
         {
             postgresOptions.UseDriverDelegate<PostgreSQLDelegate>();
-            postgresOptions.ConnectionStringName = QuartzConnectionName;
+            postgresOptions.ConnectionString = builder.Configuration.GetConnectionString(QuartzConnectionName)!;
+            postgresOptions.TablePrefix = "quartz.qrtz_";
         });
+        p.UseSystemTextJsonSerializer();
     });
 });
 builder.Services.AddQuartzHostedService(options =>
@@ -95,6 +103,8 @@ builder.Services.Configure<ForwardedHeadersOptions>(
 builder.Services.AddAccountingCore()
     .AddFileStorage()
     .AddEntityFrameworkCoreStores();
+
+builder.Services.AddScoped<IWebAssemblyHostEnvironment, ServerHostEnvironment>();
 
 builder.Services.AddSerilog();
 
@@ -132,6 +142,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseOpenApi();
+    app.UseSwaggerUi();
+}
+
 app.UseHttpsRedirection();
 
 app.MapStaticAssets();
@@ -150,6 +166,6 @@ app.MapRazorComponents<App>()
     .AddAdditionalAssemblies(typeof(Accounting.Web.Client._Imports).Assembly);
 
 app.MapAccountingQuartzApiEndpoints();
-app.MapAdditionalIdentityEndpoints();
+app.MapAdditionalIdentityEndpoints().WithTags("Account");
 
 app.Run();

@@ -19,13 +19,13 @@ namespace Accounting.Quartz.Endpoints;
 
 public static class JobDetailEndpoints
 {
-    public static IEndpointRouteBuilder MapJobDetailEndpoints(this IEndpointRouteBuilder endpoints)
+    public static IEndpointConventionBuilder MapJobDetailEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var endpointsGroup = endpoints.MapGroup("/JobDetail");
 
         endpointsGroup.MapGet("/Query", QueryJobDetails);
 
-        return endpoints;
+        return endpointsGroup;
     }
 
     private static async Task<PageList<JobDetailDto>> QueryJobDetails(

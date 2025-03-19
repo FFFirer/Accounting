@@ -22,8 +22,10 @@
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.0-preview.1.25080.5" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.0-preview.2.25163.2" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0-preview.1" />
+    <PackageVersion Include="NSwag.AspNetCore" Version="14.2.0" />
     <PackageVersion Include="Quartz.AspNetCore" Version="3.14.0" />
     <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.14.0" />
+    <PackageVersion Include="Quartz.Serialization.SystemTextJson" Version="3.14.0" />
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageVersion Include="Serilog.Extensions.Logging" Version="9.0.1-dev-02311" />
     <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.1-dev-00953" />
