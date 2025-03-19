@@ -9,4 +9,12 @@ public static class CollectionExtensions
     {
         return source is null || source.Any() == false;
     }
+
+    public static IEnumerable<T> Page<T>(this IEnumerable<T> source, int page, int size)
+    {
+        var skip = (page - 1) * size;
+        if(skip < 0) { skip = 0; }
+
+        return source.Skip(skip).Take(size);
+    }
 }

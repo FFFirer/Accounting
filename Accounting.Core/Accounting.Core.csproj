@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <PackageReference Include="MailKit" />
-    <PackageReference Include="Mapster" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
   </ItemGroup>
 

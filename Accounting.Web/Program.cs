@@ -1,6 +1,8 @@
 ﻿using Accounting;
+using Accounting.Common;
 using Accounting.Email;
 using Accounting.Quartz;
+using Accounting.Quartz.Endpoints;
 using Accounting.Web.Components;
 using Accounting.Web.Components.Account;
 
@@ -39,6 +41,7 @@ builder.Services.AddRazorComponents()
     .AddAuthenticationStateSerialization();
 
 builder.Services.AddLogging();
+builder.Services.AddScoped<ICancellationTokenProvider>(sp => new CancellationTokenProvider(sp.GetService<IHttpContextAccessor>()?.HttpContext?.RequestAborted));
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddCascadingAuthenticationState();
@@ -140,11 +143,13 @@ app.UseAuthorization();
 
 app.UseAntiforgery();
 
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Accounting.Web.Client._Imports).Assembly);
 
+app.MapAccountingQuartzApiEndpoints();
 app.MapAdditionalIdentityEndpoints();
 
 app.Run();
