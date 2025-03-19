@@ -15,13 +15,14 @@ namespace Accounting.Migrator
             this.AddGlobalOption(GlobalOptions.ConnectionNameOption);
             this.AddGlobalOption(GlobalOptions.LogLevelOption);
 
-            this.AddCommand(new ListCommand());
-            this.AddCommand(new UpdateCommand());
-            this.AddCommand(new DropCommand());
-            this.AddCommand(new UserCommand());
+            //this.AddCommand(new ListCommand());
+            //this.AddCommand(new UpdateCommand());
+            //this.AddCommand(new DropCommand());
+            //this.AddCommand(new UserCommand());
 
             this.AddCommand(new ContextsCommand());
             this.AddCommand(new MigrationsCommand());
+            this.AddCommand(new DatabaseCommand());
         }
 
         public class ListCommand : Command

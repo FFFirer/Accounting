@@ -48,23 +48,23 @@ namespace Accounting.Migrator
                 foreach (var db in contexts)
                 {
                     context.Console.FullSingleLine();
-                    context.Console.WriteLine($"[{db}]");
+                    context.Console.WriteLine(db);
                     context.Console.FullDoubleLine();
 
                     if (Constants.DbContextFactories.TryGetValue(db, out var factoryType) == false)
                     {
                         logger.LogWarning("No DbContextFactory tpye: {Key}", db);
-                        context.Console.FullSingleLine();
+                        //context.Console.FullSingleLine();
                         context.Console.WriteLine("");
                         continue;
                     }
 
-                    var dbContext = Helper.CreateDbContextFromFactory(factoryType, connectionName);
+                    using var dbContext = Helper.CreateDbContextFromFactory(factoryType, connectionName);
 
                     if(dbContext is null)
                     {
-                        logger.LogWarning("Cannot instance db.");
-                        context.Console.FullSingleLine();
+                        logger.LogWarning("Cannot create instance of db.");
+                        //context.Console.FullSingleLine();
                         context.Console.WriteLine("");
                         continue;
                     }
@@ -82,7 +82,7 @@ namespace Accounting.Migrator
                             context.FormatToOutput(migrations, "table");
                         }
 
-                        context.Console.FullSingleLine();
+                        //context.Console.FullSingleLine();
                         context.Console.WriteLine("");
                         continue;
                     }
@@ -105,7 +105,7 @@ namespace Accounting.Migrator
                             context.FormatToOutput(migrations, "table");
                         }
 
-                        context.Console.FullSingleLine();
+                        //context.Console.FullSingleLine();
                         context.Console.WriteLine("");
                         continue;
                     }
@@ -119,7 +119,7 @@ namespace Accounting.Migrator
                         var migrations = dbContext.Database.GetMigrations().Select(x => new
                         {
                             Name = x,
-                            Applied = applied.ContainsKey(x) ? "√" : ""
+                            Applied = applied.ContainsKey(x) ? "YES" : ""
                         }).ToList();
 
                         if(migrations.IsNullOrEmpty())
@@ -131,7 +131,7 @@ namespace Accounting.Migrator
                             context.FormatToOutput(migrations, "table");
                         }
 
-                        context.Console.FullSingleLine();
+                        //context.Console.FullSingleLine();
                         context.Console.WriteLine("");
                     }
                 }
