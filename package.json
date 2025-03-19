@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "css:build": "npx tailwindcss -i ./frontend/index.css -o ./dist/index.css"
+    "css:build": "npx tailwindcss -i ./frontend/index.css -o ./dist/index.css",
+    "nswag": "cd nswag/ && refresh.bat"
   },
   "keywords": [],
   "author": "",
