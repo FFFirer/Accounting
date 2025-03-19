@@ -234,9 +234,9 @@ namespace Accounting.Migrator
 
                     using var fs = new FileStream(scriptFilePath, FileMode.OpenOrCreate, FileAccess.Write);
                     using var writer = new StreamWriter(fs, Encoding.UTF8);
-                    await writer.WriteAsync($"-- DbContext: {db}\r\n\r\n");
+                    await writer.WriteAsync($"-- Start DbContext: {db}\r\n\r\n");
                     await writer.WriteAsync(script);
-                    await writer.WriteAsync($"\r\n\r\n-- DbContext: {db} End\r\n\r\n");
+                    await writer.WriteAsync($"\r\n\r\n-- End DbContext: {db}\r\n\r\n");
 
                     context.Console.WriteLine($"Generated into {scriptFilePath}");
                     context.Console.WriteLine("");
