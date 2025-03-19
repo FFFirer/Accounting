@@ -19,6 +19,10 @@
     "contexts-list": {
       "commandName": "Project",
       "commandLineArgs": "contexts list"
+    },
+    "migrations-script": {
+      "commandName": "Project",
+      "commandLineArgs": "migrations script"
     }
   }
 }
