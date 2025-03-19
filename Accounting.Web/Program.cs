@@ -1,17 +1,21 @@
 ﻿using Accounting;
 using Accounting.Email;
+using Accounting.Quartz;
 using Accounting.Web.Components;
 using Accounting.Web.Components.Account;
 
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-using Serilog;
-using Serilog.Events;
+using Quartz;
+using Quartz.Impl.AdoJobStore;
 
+using Serilog;
+
+const string DefaultConnectionName = "Default";
+const string QuartzConnectionName = nameof(Quartz);
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
@@ -20,10 +24,13 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<AccountingDbContext>(options =>
-{
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Default"));
-});
+builder.Services
+    .AddDbContext<AccountingDbContext>(
+        options => options.UseNpgsql(builder.Configuration.GetConnectionString(DefaultConnectionName)));
+
+builder.Services
+    .AddDbContext<AccountingQuartzDbContext>(
+        options => options.UseNpgsql(builder.Configuration.GetConnectionString(DefaultConnectionName))); 
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -39,7 +46,7 @@ builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
-builder.Services.AddAntiforgery(options => {  });
+builder.Services.AddAntiforgery(options => { });
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = IdentityConstants.ApplicationScheme;
@@ -56,6 +63,24 @@ builder.Services.AddIdentityCore<User>()
 // {
 //     options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPropertiesAndHeaders;
 // });
+
+// Quartz
+builder.Services.Configure<QuartzOptions>(builder.Configuration.GetSection(nameof(Quartz)));
+builder.Services.AddQuartz(config =>
+{
+    config.UsePersistentStore(p =>
+    {
+        p.UsePostgres(postgresOptions =>
+        {
+            postgresOptions.UseDriverDelegate<PostgreSQLDelegate>();
+            postgresOptions.ConnectionStringName = QuartzConnectionName;
+        });
+    });
+});
+builder.Services.AddQuartzHostedService(options =>
+{
+    options.WaitForJobsToComplete = true;
+});
 
 builder.Services.Configure<ForwardedHeadersOptions>(
     options =>

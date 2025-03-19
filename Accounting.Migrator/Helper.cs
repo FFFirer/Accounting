@@ -33,6 +33,18 @@ public static class Helper
         });
     }
 
+    public static DbContext? CreateDbContextFromFactory(Type factoryType, string? connectionName)
+    {
+        var configuration = BuildConfiguration();
+        dynamic? factory = Activator.CreateInstance(factoryType, configuration);
+
+        return factory?.CreateDbContext(new string[]
+        {
+            "connection-name",
+            (connectionName ?? "Default")
+        });
+    }
+
     public static IServiceProvider BuildServiceProvider(string connectionName)
     {
         var configuration = BuildConfiguration();

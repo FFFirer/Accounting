@@ -10,12 +10,18 @@ namespace Accounting.Migrator
     {
         public Root()
         {
+            this.AddGlobalOption(GlobalOptions.FormatOption);
+
             this.AddGlobalOption(GlobalOptions.ConnectionNameOption);
+            this.AddGlobalOption(GlobalOptions.LogLevelOption);
 
             this.AddCommand(new ListCommand());
             this.AddCommand(new UpdateCommand());
             this.AddCommand(new DropCommand());
             this.AddCommand(new UserCommand());
+
+            this.AddCommand(new ContextsCommand());
+            this.AddCommand(new MigrationsCommand());
         }
 
         public class ListCommand : Command

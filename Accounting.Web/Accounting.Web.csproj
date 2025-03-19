@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Accounting.Core\Accounting.Core.csproj" />
+    <ProjectReference Include="..\Accounting.Quartz\Accounting.Quartz.csproj" />
     <ProjectReference Include="..\Accounting.Stores\Accounting.Stores.csproj" />
     <ProjectReference Include="..\Accounting.Web.Client\Accounting.Web.Client.csproj" />
   </ItemGroup>
