@@ -1,3 +1,4 @@
+import { BlazorNavLinkGuard } from "@frontend/components/BlazorNavLinkGuard";
 import { RouteDefinition, Router } from "@solidjs/router";
 import { lazy } from "solid-js";
 import { render } from "solid-js/web";
@@ -19,7 +20,7 @@ const AppTasksRoutes: RouteDefinition[] = [
 const AppTasksRoutePrefix = "/app/Tasks";
 
 const AppTasks = () => {
-  return <Router base={AppTasksRoutePrefix}>{AppTasksRoutes}</Router>;
+  return <Router base={AppTasksRoutePrefix} root={BlazorNavLinkGuard}>{AppTasksRoutes}</Router>;
 };
 
 const renderAppTasks = (el: HTMLElement) => {
