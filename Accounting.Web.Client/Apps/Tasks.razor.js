@@ -1,0 +1,1 @@
+import { renderAppTasks } from '/frontend/index.js'

@@ -26,6 +26,9 @@
       <NavLink href="/Tasks" ActiveClass="menu-active">Tasks</NavLink>
     </li>
     <li>
+      <NavLink href="/app/Tasks" ActiveClass="menu-active">Client Tasks</NavLink>
+    </li>
+    <li>
       <form method="post" action="/Account/Logout">
         <AntiforgeryToken></AntiforgeryToken>
         <input type="hidden" name="ReturnUrl" value="@currentUrl" />

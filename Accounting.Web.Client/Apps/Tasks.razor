@@ -1,0 +1,10 @@
+@page "/app/Tasks/{**appRoute}"
+
+<PageTitle>任务管理</PageTitle>
+
+<AppModule AppRoute="@appRoute" RenderFuncName="renderAppTasks" ModuleFilePath="/_content/Accounting.Web.Client/Apps/Tasks.razor.js" />
+
+@code {
+    [Parameter]
+    public string? appRoute {get;set;}
+}
