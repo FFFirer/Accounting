@@ -8,7 +8,7 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming 
 
-import { HttpValidationProblemDetails, ProblemDetails } from "@src/utils/ProblemDetails";
+import { HttpValidationProblemDetails, ProblemDetails } from "@frontend/utils/ProblemDetails";
 
 export class JobDetailClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
@@ -17,7 +17,7 @@ export class JobDetailClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl ?? "https://localhost:7008";
+        this.baseUrl = baseUrl ?? "http://localhost:7008";
     }
 
     getApiJobDetailQuery(page: number, size: number): Promise<PageListOfJobDetailDto> {
@@ -70,7 +70,7 @@ export class JobClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl ?? "https://localhost:7008";
+        this.baseUrl = baseUrl ?? "http://localhost:7008";
     }
 
     getApiJobQuery(page: number, size: number): Promise<PageListOfJobDefinationDto> {
@@ -123,7 +123,7 @@ export class AccountClient {
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : window as any;
-        this.baseUrl = baseUrl ?? "https://localhost:7008";
+        this.baseUrl = baseUrl ?? "http://localhost:7008";
     }
 
     postAccountPerformExternalLogin(provider: string, returnUrl: string): Promise<void> {
