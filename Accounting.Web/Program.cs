@@ -3,6 +3,8 @@ using Accounting.Common;
 using Accounting.Email;
 using Accounting.Quartz;
 using Accounting.Quartz.Endpoints;
+using Accounting.Web;
+using Accounting.Web.Client;
 using Accounting.Web.Common;
 using Accounting.Web.Components;
 using Accounting.Web.Components.Account;
@@ -108,6 +110,7 @@ builder.Services.AddAccountingCore()
     .AddFileStorage()
     .AddEntityFrameworkCoreStores();
 
+builder.Services.AddScoped<IThemeService, AspNetThemeService>();
 builder.Services.AddScoped<IWebAssemblyHostEnvironment, ServerHostEnvironment>();
 
 builder.Host.UseSerilog();

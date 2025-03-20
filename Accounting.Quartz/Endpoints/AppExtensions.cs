@@ -13,8 +13,8 @@ public static class AppExtensions
     public static IEndpointRouteBuilder MapAccountingQuartzApiEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints.MapGroup("/api");
-        apiGroup.MapJobDetailEndpoints().WithTags("JobDetail");
-        apiGroup.MapJobEndpoints().WithTags("Job");
+        apiGroup.MapJobDetailEndpoints().WithTags("JobDetail").RequireAuthorization();
+        apiGroup.MapJobEndpoints().WithTags("Job").RequireAuthorization();
 
         return apiGroup;
     }
