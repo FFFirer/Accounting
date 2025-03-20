@@ -7,8 +7,11 @@ export default defineConfig({
   plugins: [tailwindcss(), solidPlugin()],
   server: {
     port: 3000,
+    hmr: {
+      port: 3000
+    }
   },
-  base: '/app',
+  base: '/frontend',
   build: {
     target: 'esnext',
     lib: {
