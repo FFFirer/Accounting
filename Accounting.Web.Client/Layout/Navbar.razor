@@ -10,13 +10,22 @@
                     {
                         foreach (var nav in this.Navs)
                         {
-                            <li>
-                                <NavLink ActiveClass="menu-active" href="@nav.Path">@nav.Name</NavLink>
-                            </li>
+                            if (nav.clientNav)
+                            {
+                                <li>
+                                    <NavLink ActiveClass="menu-active" href="@nav.Path">@nav.Name</NavLink>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <NavLink ActiveClass="menu-active" href="@nav.Path">@nav.Name</NavLink>
+                                </li>
+                            }
                         }
                     }
 
-                    @if(this.Env?.Environment == "Development" )
+                    @if (this.Env?.Environment == "Development")
                     {
                         <li>
                             <NavLink ActiveClass="menu-active" href="/swagger">OpenAPI Docs</NavLink>

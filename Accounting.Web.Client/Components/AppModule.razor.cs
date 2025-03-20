@@ -10,6 +10,9 @@ public partial class AppModule : ComponentBase
     [Inject]
     private IJSRuntime? js { get; set; }
 
+    [Inject]
+    private ILogger<AppModule>? logger { get; set; }
+
     [Parameter]
     public string? AppRoute { get; set; }
 
@@ -24,10 +27,19 @@ public partial class AppModule : ComponentBase
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        logger?.LogDebug("[OnAfterRender] Route:{AppRoute}", AppRoute);
+
+        try
         {
-            var module = await js!.InvokeAsync<IJSObjectReference>("import", ModuleFilePath);
-            await module.InvokeVoidAsync(RenderFuncName!, elementReference);
+            if (firstRender)
+            {
+                var module = await js!.InvokeAsync<IJSObjectReference>("import", ModuleFilePath);
+                await module.InvokeVoidAsync(RenderFuncName!, elementReference);
+            }
+        }
+        catch (System.Exception ex)
+        {
+            logger?.LogError(ex, "Run {RenderFuncName} Failed", RenderFuncName);
         }
     }
 }

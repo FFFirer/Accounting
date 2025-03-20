@@ -17,16 +17,17 @@ using Quartz;
 using Quartz.Impl.AdoJobStore;
 
 using Serilog;
+using Serilog.Events;
 
 const string DefaultConnectionName = "Default";
 const string QuartzConnectionName = "Quartz";
 
+var builder = WebApplication.CreateBuilder(args);
+
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
-    .WriteTo.Console()
+    .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
-
-var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddDbContext<AccountingDbContext>(
@@ -34,7 +35,7 @@ builder.Services
 
 builder.Services
     .AddDbContext<AccountingQuartzDbContext>(
-        options => options.UseNpgsql(builder.Configuration.GetConnectionString(QuartzConnectionName))); 
+        options => options.UseNpgsql(builder.Configuration.GetConnectionString(QuartzConnectionName)));
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -45,7 +46,10 @@ builder.Services.AddRazorComponents()
 builder.Services.AddOpenApiDocument();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddLogging();
+builder.Services.AddLogging(options =>
+{
+    options.AddSerilog(Log.Logger);
+});
 builder.Services.AddScoped<ICancellationTokenProvider>(sp => new CancellationTokenProvider(sp.GetService<IHttpContextAccessor>()?.HttpContext?.RequestAborted));
 
 builder.Services.AddHttpContextAccessor();
@@ -105,8 +109,6 @@ builder.Services.AddAccountingCore()
     .AddEntityFrameworkCoreStores();
 
 builder.Services.AddScoped<IWebAssemblyHostEnvironment, ServerHostEnvironment>();
-
-builder.Services.AddSerilog();
 
 builder.Host.UseSerilog();
 

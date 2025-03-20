@@ -1,1 +1,2 @@
-import { renderAppTasks } from '/frontend/index.js'
+// re-export render func
+export { renderAppTasks } from '/frontend/index.js'

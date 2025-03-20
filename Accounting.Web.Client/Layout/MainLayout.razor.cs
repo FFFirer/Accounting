@@ -16,6 +16,7 @@ public partial class MainLayout : LayoutComponentBase, IAsyncDisposable
 "资产账户")];
 
     static ICollection<NavModel> TaskNavs = [new("/Tasks/#", "任务定义"), new("/Tasks/#", "任务实例"), new("/Tasks/#", "任务日志")];
+    static ICollection<NavModel> AppTasksNavs = [new("/app/Tasks/Demo1", "Demo1", true), new("/app/Tasks/Demo2", "Demo2", true)];
 
     public ICollection<NavModel> DefaultNavs { get; set; } = [];
 
@@ -36,9 +37,15 @@ public partial class MainLayout : LayoutComponentBase, IAsyncDisposable
         if (string.IsNullOrWhiteSpace(url)) { return MainNavs; }
 
         var uri = new Uri(url);
+
         if (uri.PathAndQuery.StartsWith("/Tasks"))
         {
             return TaskNavs;
+        }
+
+        if (uri.PathAndQuery.StartsWith("/app/Tasks"))
+        {
+            return AppTasksNavs;
         }
 
         return MainNavs;
