@@ -1,7 +1,7 @@
 import { RouteDefinition } from "@solidjs/router";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import { TaskList } from "./pages/Tasks/List";
+import TaskList from "./pages/Tasks/List";
 
 export const Routes: RouteDefinition[] = [
   { path: "/", component: Home },

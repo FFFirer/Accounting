@@ -1,3 +1,3 @@
-export const TaskList = () => {
-    return <h1>Hello world</h1>
-}
+export default () => {
+  return <h1>Hello world!</h1>;
+};
