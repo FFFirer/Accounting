@@ -27,7 +27,7 @@ public partial class AppModule : ComponentBase
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        logger?.LogDebug("[OnAfterRender] Route:{AppRoute}", AppRoute);
+        logger?.LogDebug("[OnAfterRender] Route:{AppRoute}, {FirstRender}", AppRoute, firstRender) ;
 
         try
         {

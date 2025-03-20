@@ -12,21 +12,16 @@ import {
 export const BlazorNavLinkGuard: ParentComponent = (props) => {
   const loc = useLocation();
   const routing = useIsRouting();
-  const root = createEffect(() => {
+
+  createEffect(() => {
     const disabledBlazorEnhanceNavLinks = document.querySelectorAll(
       "a[data-enhance-nav=false][data-not-solid]"
     );
-    console.log(
-      "BlazorNavLinkGuard",
-      "routing",
-      "to",
-      loc.pathname,
-      disabledBlazorEnhanceNavLinks
-    );
+
     disabledBlazorEnhanceNavLinks.forEach((el: Element) => {
       const anchor = el as HTMLAnchorElement;
       const activeClass = anchor.dataset["activeClass"] || "active";
-      
+
       const url = new URL(anchor.href);
       const match = loc.pathname.startsWith(url.pathname);
 
