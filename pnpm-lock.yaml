@@ -26,6 +26,9 @@ importers:
       lucide-solid:
         specifier: ^0.479.0
         version: 0.479.0(solid-js@1.9.5)
+      solid-form-context:
+        specifier: ^0.0.12
+        version: 0.0.12(solid-js@1.9.5)
       solid-js:
         specifier: ^1.9.5
         version: 1.9.5
@@ -878,6 +881,11 @@ packages:
     resolution: {integrity: sha512-yBxFFs3zmkvKNmR0pFSU//rIsYjuX418TnlDmc2weaq5XFDqDIV/NOMPBoLrbxjLH42p4UzRuXHryXh9dYcKcw==}
     engines: {node: '>=10'}
 
+  solid-form-context@0.0.12:
+    resolution: {integrity: sha512-QEjgC7Cw8XxX0l2nxD7Onn+5QP80FfdLZfVepv2Ehn4gXsJu9s8saVpVy8y1ulOzQHMxzJEJPMP84+zhczeBLA==}
+    peerDependencies:
+      solid-js: ^1.8.11
+
   solid-js@1.9.5:
     resolution: {integrity: sha512-ogI3DaFcyn6UhYhrgcyRAMbu/buBJitYQASZz5WzfQVPP10RD2AbCoRZ517psnezrasyCbWzIxZ6kVqet768xw==}
 
@@ -1673,6 +1681,10 @@ snapshots:
       seroval: 1.2.1
 
   seroval@1.2.1: {}
+
+  solid-form-context@0.0.12(solid-js@1.9.5):
+    dependencies:
+      solid-js: 1.9.5
 
   solid-js@1.9.5:
     dependencies:
