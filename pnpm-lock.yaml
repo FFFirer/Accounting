@@ -33,8 +33,8 @@ importers:
         specifier: ^1.9.5
         version: 1.9.5
       solid-table-context:
-        specifier: ^1.0.2
-        version: 1.0.2(solid-js@1.9.5)
+        specifier: ^1.0.4
+        version: 1.0.4(solid-js@1.9.5)
       solid-toast:
         specifier: ^0.5.0
         version: 0.5.0(solid-js@1.9.5)
@@ -903,8 +903,8 @@ packages:
     peerDependencies:
       solid-js: ^1.3
 
-  solid-table-context@1.0.2:
-    resolution: {integrity: sha512-VwuqwmYYAqLwmZnTDGl+slI2iFdWva7IWTusVlINWqARcsyRg3fQoZfXneKdNqKBx9U7HeAp08aCsw2zhJWSDQ==}
+  solid-table-context@1.0.4:
+    resolution: {integrity: sha512-EUlLbndo89B1MkmfTWF79xtmjfupE4C/dIcIGqYZO+Azpy/mqJcr4RY9sH/eJu+spanEW9rcUiYDVykKCAzYTQ==}
     peerDependencies:
       solid-js: ^1.9.5
 
@@ -1722,7 +1722,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  solid-table-context@1.0.2(solid-js@1.9.5):
+  solid-table-context@1.0.4(solid-js@1.9.5):
     dependencies:
       '@solidjs/router': 0.15.3(solid-js@1.9.5)
       clsx: 2.1.1

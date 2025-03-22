@@ -76,7 +76,7 @@ export const createPaginationState = (
 export const Pagination = (
   props: { state: PaginationState } & JSX.HTMLAttributes<HTMLUListElement>
 ) => {
-  const [local, others] = splitProps(props, ["state", "class"]);
+  const [local, others] = splitProps(props, ["state", "class", "classList"]);
 
   const handleEnter = (e: KeyboardEvent) => {
     if (e.code === "Enter") {
@@ -90,7 +90,7 @@ export const Pagination = (
   };
 
   return (
-    <ul class={cn(" menu-horizontal join", local.class)} {...others}>
+    <ul class={cn(" menu-horizontal join", local.class, local.classList)} {...others}>
       <li class="pagination-total hover:shadow-none">
         <div class="btn bg-white border-none hover:shadow-none cursor-text">
           <span class="font-medium">Total</span>
