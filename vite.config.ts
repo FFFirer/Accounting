@@ -1,7 +1,8 @@
-import { defineConfig } from 'vite';
+import { defineConfig, Plugin } from 'vite';
 import solidPlugin from 'vite-plugin-solid';
 import { resolve } from 'path';
 import tailwindcss from '@tailwindcss/vite';
+import MagicString from "magic-string"
 
 export default defineConfig({
   plugins: [tailwindcss(), solidPlugin()],

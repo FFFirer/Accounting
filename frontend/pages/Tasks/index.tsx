@@ -1,20 +1,20 @@
 import { BlazorNavLinkGuard } from "@frontend/components/BlazorNavLinkGuard";
-import { RouteDefinition, Router } from "@solidjs/router";
+import { Navigate, RouteDefinition, Router } from "@solidjs/router";
 import { lazy } from "solid-js";
 import { render } from "solid-js/web";
 
 const AppTasksRoutes: RouteDefinition[] = [
   {
     path: "/",
-    component: lazy(() => import("./List")),
+    component: () => <Navigate href={'/Jobs'} />,
   },
   {
-    path: "/Demo1",
-    component: () => <h1>Demo1</h1>
+    path: "/Jobs",
+    component: lazy(() => import("./List"))
   },
   {
-    path: "/Demo2",
-    component: () => <h1>Demo2</h1>
+    path: "/JobDetails",
+    component: lazy(() => import("./JobDetails"))
   }
 ];
 const AppTasksRoutePrefix = "/app/Tasks";

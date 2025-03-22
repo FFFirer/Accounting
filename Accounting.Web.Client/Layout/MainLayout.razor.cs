@@ -10,19 +10,26 @@ public partial class MainLayout : LayoutComponentBase, IAsyncDisposable
 {
 
     [Inject]
+    private IWebAssemblyHostEnvironment? Env { get; set; }
+    [Inject]
     private NavigationManager? NavigationManager { get; set; }
 
+    static NavModel SwaggerNav = new("/swagger", "OpenAPI Docs");
     static ICollection<NavModel> MainNavs = [new("/Dashboard", "仪表板"), new("/Ledgers", "账本管理"), new("/AssetAccounts",
 "资产账户")];
 
     static ICollection<NavModel> TaskNavs = [new("/Tasks/#", "任务定义"), new("/Tasks/#", "任务实例"), new("/Tasks/#", "任务日志")];
-    static ICollection<NavModel> AppTasksNavs = [new("/app/Tasks/Demo1", "Demo1", true), new("/app/Tasks/Demo2", "Demo2", true)];
+    static ICollection<NavModel> AppTasksNavs = [new("/app/Tasks/Jobs", "任务定义", true), new("/app/Tasks/JobDetails", "任务详情", true), new("/app/Tasks/Triggers", "触发器", true)];
 
     public ICollection<NavModel> DefaultNavs { get; set; } = [];
 
     protected override Task OnInitializedAsync()
     {
         this.DefaultNavs = GetNavsFromUri(this.NavigationManager?.Uri);
+
+        if(this.Env?.Environment == "Development") {
+            this.DefaultNavs.Add(SwaggerNav);
+        }
 
         if (this.NavigationManager is not null)
         {

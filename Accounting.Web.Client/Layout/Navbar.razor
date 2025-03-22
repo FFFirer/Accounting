@@ -1,8 +1,39 @@
 ﻿<div class="navbar bg-base-100 shadow-sm">
     <div class="navbar-start">
+        <AuthorizeView>
+            <Authorized>
+                <div class=" dropdown">
+                    <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                        <MenuIcon />
+                    </div>
+                    <ul class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 shadow p-2">
+                        @if (this.Navs is not null && this.Navs.Count > 0)
+                        {
+                            foreach (var nav in this.Navs)
+                            {
+                                if (nav.clientNav)
+                                {
+                                    <li>
+                                        <NavLink data-enhance-nav="false" data-not-solid="true" data-active-class="menu-active"
+                                            ActiveClass="menu-active" href="@nav.Path">@nav.Name</NavLink>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <NavLink ActiveClass="menu-active" href="@nav.Path">@nav.Name</NavLink>
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+
         <NavLink href="/" class="btn btn-ghost text-xl">Accounting</NavLink>
     </div>
-    <div class="navbar-center flex flex-row justify-center">
+    <div class="navbar-center hidden lg:flex ">
         <AuthorizeView>
             <Authorized>
                 <ul class="menu menu-horizontal py-0">
@@ -13,7 +44,8 @@
                             if (nav.clientNav)
                             {
                                 <li>
-                                    <NavLink data-enhance-nav="false" data-not-solid="true" data-active-class="menu-active" ActiveClass="menu-active" href="@nav.Path">@nav.Name</NavLink>
+                                    <NavLink data-enhance-nav="false" data-not-solid="true" data-active-class="menu-active"
+                                        ActiveClass="menu-active" href="@nav.Path">@nav.Name</NavLink>
                                 </li>
                             }
                             else
@@ -23,13 +55,6 @@
                                 </li>
                             }
                         }
-                    }
-
-                    @if (this.Env?.Environment == "Development")
-                    {
-                        <li>
-                            <NavLink ActiveClass="menu-active" href="/swagger">OpenAPI Docs</NavLink>
-                        </li>
                     }
                 </ul>
             </Authorized>

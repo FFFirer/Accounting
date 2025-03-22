@@ -80,24 +80,28 @@ builder.Services.AddIdentityCore<User>()
 
 // Quartz
 builder.Services.Configure<QuartzOptions>(builder.Configuration.GetSection(nameof(Quartz)));
-builder.Services.AddQuartz(config =>
-{
-    config.UsePersistentStore(p =>
-    {
-        p.UseProperties = true;
-        p.UsePostgres(postgresOptions =>
+builder.Services
+    .AddQuartz(
+        config =>
         {
-            postgresOptions.UseDriverDelegate<PostgreSQLDelegate>();
-            postgresOptions.ConnectionString = builder.Configuration.GetConnectionString(QuartzConnectionName)!;
-            postgresOptions.TablePrefix = "quartz.qrtz_";
-        });
-        p.UseSystemTextJsonSerializer();
-    });
-});
-builder.Services.AddQuartzHostedService(options =>
-{
-    options.WaitForJobsToComplete = true;
-});
+            config.UsePersistentStore(p =>
+            {
+                p.UseProperties = true;
+                p.UsePostgres(postgresOptions =>
+                {
+                    postgresOptions.UseDriverDelegate<PostgreSQLDelegate>();
+                    postgresOptions.ConnectionString = builder.Configuration.GetConnectionString(QuartzConnectionName)!;
+                    postgresOptions.TablePrefix = "quartz.qrtz_";
+                });
+                p.UseSystemTextJsonSerializer();
+            });
+        })
+    .AddQuartzHostedService(
+        options =>
+        {
+            options.WaitForJobsToComplete = true;
+        })
+    .AddAccountingJobs();
 
 builder.Services.Configure<ForwardedHeadersOptions>(
     options =>

@@ -22,12 +22,15 @@ public partial class AppModule : ComponentBase
     [Parameter]
     public string? RenderFuncName { get; set; }
 
+    [Parameter]
+    public string? ClassNames { get; set; } = "";
+
     public ElementReference? elementReference { get; set; }
     public IJSObjectReference? module { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        logger?.LogDebug("[OnAfterRender] Route:{AppRoute}, {FirstRender}", AppRoute, firstRender) ;
+        logger?.LogDebug("[OnAfterRender] Route:{AppRoute}, {FirstRender}", AppRoute, firstRender);
 
         try
         {
