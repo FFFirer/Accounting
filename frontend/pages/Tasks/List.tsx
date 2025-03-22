@@ -38,23 +38,6 @@ export default () => {
     <div class="size-full flex flex-1 flex-col">
       <ErrorBoundary fallback={ErrorReset}>
         <div class="flex flex-row mb-2 gap-2">
-          <Form>
-            <FormField name={"asd"}>
-              <FormControl
-                control={"input"}
-                controlProps={{
-                  type: "text",
-                  class: "input",
-                  placeholder: "Full Name...",
-                }}
-                controlValuePropName="value"
-                onControlValueChanged={{
-                  eventName: "onchange",
-                  generateHandler: (setter) => (e) => setter?.(e.target.value),
-                }}
-              ></FormControl>
-            </FormField>
-          </Form>
           <button type="button" class="btn btn-primary" onclick={refetch}>
             <OcSearch3 />
             查询
@@ -70,7 +53,7 @@ export default () => {
             <TableColumn name={"fullName"} header="Full Name" />
           </Table>
         </div>
-        <Pagination state={pagination}></Pagination>
+        <Pagination class=" rounded-box" state={pagination}></Pagination>
       </ErrorBoundary>
     </div>
   );
