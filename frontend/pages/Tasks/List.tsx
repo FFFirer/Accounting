@@ -44,6 +44,7 @@ import {
 import { solidSwal } from "@frontend/utils/swal2";
 import ErrorsTable from "@frontend/components/ErrorsTable";
 import { Toast } from "@frontend/components/Toast";
+import Page from "@frontend/components/Page";
 
 const client = useClient(JobClient);
 const detailClient = useClient(JobDetailClient);
@@ -109,7 +110,7 @@ export default () => {
   };
 
   return (
-    <div class="size-full flex flex-1 flex-col">
+    <Page title="任务定义">
       <ErrorBoundary fallback={ErrorReset}>
         <div class="flex flex-row mb-2 gap-2">
           <button type="button" class="btn btn-primary" onclick={refetch}>
@@ -178,6 +179,6 @@ export default () => {
           </Form>
         </Dialog>
       </ErrorBoundary>
-    </div>
+    </Page>
   );
 };

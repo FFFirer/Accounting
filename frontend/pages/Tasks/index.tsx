@@ -1,5 +1,6 @@
 import { BlazorNavLinkGuard } from "@frontend/components/BlazorNavLinkGuard";
 import { DialogContainer } from "@frontend/components/Dialog";
+import RouteGuard from "@frontend/components/RouteGuard";
 import { Navigate, RouteDefinition, Router } from "@solidjs/router";
 import { lazy } from "solid-js";
 import { render } from "solid-js/web";
@@ -24,7 +25,7 @@ const AppTasks = () => {
   return (
     <>
       <DialogContainer />
-      <Router base={AppTasksRoutePrefix} root={BlazorNavLinkGuard}>
+      <Router base={AppTasksRoutePrefix} root={RouteGuard}>
         {AppTasksRoutes}
       </Router>
     </>
