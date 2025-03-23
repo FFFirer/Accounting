@@ -50,3 +50,34 @@
 .colored-toast .swal2-html-container {
   color: white;
 }
+
+.loading-parent--relative {
+  position: relative !important
+}
+
+.loading-parent--hidden {
+  overflow: hidden !important
+}
+
+.loading-mask {
+  position: absolute;
+  z-index: 500;
+  margin: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transition: opacity .3s;
+  /* background-color: hsla(0, 0%, 100%, .7); */
+
+  align-items: center;
+
+  .loading-mask-content {
+      z-index: inherit;
+      z-index: 505;
+  }
+}
+
+.loading-mask.is-fullscreen {
+  position: fixed
+}

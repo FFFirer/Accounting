@@ -49,6 +49,8 @@ import { solidSwal } from "@frontend/utils/swal2";
 import ErrorsTable from "@frontend/components/ErrorsTable";
 import { Toast } from "@frontend/components/Toast";
 import Page from "@frontend/components/Page";
+import Loading from "@frontend/components/Loading";
+import Spinner from "@frontend/components/Spinner";
 
 const client = useClient(JobClient);
 const detailClient = useClient(JobDetailClient);
@@ -111,93 +113,98 @@ export default () => {
   };
 
   return (
-    <Page>
-      <ErrorBoundary fallback={ErrorReset}>
-        <div class="flex flex-row mb-2 gap-2">
-          <button type="button" class="btn btn-primary" onclick={refetch}>
-            <OcSearch3 />
-            查询
-          </button>
-        </div>
-        <div class="grow overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-          <Table class="table table-zebra table-pin-rows" datas={jobs()}>
-            <IndexColumn cellClass="font-bold" />
-            <TableColumn name={"namespace"} header="Namespace" />
-            <TableColumn name={"fullName"} header="Full Name" />
-            <TableColumn header={"Operations"}>
-              {(data) => (
-                <button
-                  type="button"
-                  class="btn btn-primary btn-xs text-nowrap"
-                  onClick={() => createJobDetail(data)}
-                >
-                  <BsPlus size={20} />
-                  添加实例
-                </button>
-              )}
-            </TableColumn>
-          </Table>
-        </div>
-        <Pagination class=" rounded-box" state={pagination}></Pagination>
-        <Dialog
-          shell={dialogShell}
-          onClose={handleClose}
-          onShow={AutoFocusFormInputs(dialogShell.ref())}
-        >
-          <DialogTopCloseButton />
+    <Loading
+      show={resource.loading}
+      spinner={<Spinner class="loading-dots loading-xl text-primary" />}
+    >
+      <Page>
+        <ErrorBoundary fallback={ErrorReset}>
+          <div class="flex flex-row mb-2 gap-2">
+            <button type="button" class="btn btn-primary" onclick={refetch}>
+              <OcSearch3 />
+              查询
+            </button>
+          </div>
+          <div class="grow overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+            <Table class="table table-zebra table-pin-rows" datas={jobs()}>
+              <IndexColumn cellClass="font-bold" />
+              <TableColumn name={"namespace"} header="Namespace" />
+              <TableColumn name={"fullName"} header="Full Name" />
+              <TableColumn header={"Operations"}>
+                {(data) => (
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-xs text-nowrap"
+                    onClick={() => createJobDetail(data)}
+                  >
+                    <BsPlus size={20} />
+                    添加实例
+                  </button>
+                )}
+              </TableColumn>
+            </Table>
+          </div>
+          <Pagination class=" rounded-box" state={pagination}></Pagination>
+          <Dialog
+            shell={dialogShell}
+            onClose={handleClose}
+            onShow={AutoFocusFormInputs(dialogShell.ref())}
+          >
+            <DialogTopCloseButton />
 
-          <h3 class="text-lg font-bold mb-3">添加一个新的任务实例</h3>
+            <h3 class="text-lg font-bold mb-3">添加一个新的任务实例</h3>
 
-          <Form onRef={setForm} onSubmit={handleSubmit}>
-            <FormField name={"className"}>
-              <div class="mb-2">
-                <label class="input">
-                  Class Name
-                  <FormInputText
-                    tabIndex={1}
-                    class="grow"
-                    readonly
-                  ></FormInputText>
-                </label>
-              </div>
-            </FormField>
-            <FormField name={"group"}>
-              <div class="mb-2">
-                <label class="input">
-                  Group
-                  <FormInputText
-                    tabIndex={2}
-                    autofocus
-                    class="grow"
-                    placeholder="给任务一个分组名称"
-                  ></FormInputText>
-                </label>
-              </div>
-            </FormField>
-            <FormField name={"name"}>
-              <div class="mb-2">
-                <label class="input">
-                  Name
-                  <FormInputText
-                    tabIndex={3}
-                    class="grow"
-                    placeholder="给任务起个名字"
-                  />
-                </label>
-              </div>
-            </FormField>
+            <Form onRef={setForm} onSubmit={handleSubmit}>
+              <FormField name={"className"}>
+                <div class="mb-2">
+                  <label class="input">
+                    Class Name
+                    <FormInputText
+                      tabIndex={1}
+                      class="grow"
+                      readonly
+                    ></FormInputText>
+                  </label>
+                </div>
+              </FormField>
+              <FormField name={"group"}>
+                <div class="mb-2">
+                  <label class="input">
+                    Group
+                    <FormInputText
+                      tabIndex={2}
+                      autofocus
+                      class="grow"
+                      placeholder="给任务一个分组名称"
+                    ></FormInputText>
+                  </label>
+                </div>
+              </FormField>
+              <FormField name={"name"}>
+                <div class="mb-2">
+                  <label class="input">
+                    Name
+                    <FormInputText
+                      tabIndex={3}
+                      class="grow"
+                      placeholder="给任务起个名字"
+                    />
+                  </label>
+                </div>
+              </FormField>
 
-            <DialogAction>
-              <FormSubmit tabIndex={4} class="btn btn-outline">
-                创建
-              </FormSubmit>
-              <DialogCloseButton tabIndex={5} class=" relative">
-                取消
-              </DialogCloseButton>
-            </DialogAction>
-          </Form>
-        </Dialog>
-      </ErrorBoundary>
-    </Page>
+              <DialogAction>
+                <FormSubmit tabIndex={4} class="btn btn-outline">
+                  创建
+                </FormSubmit>
+                <DialogCloseButton tabIndex={5} class=" relative">
+                  取消
+                </DialogCloseButton>
+              </DialogAction>
+            </Form>
+          </Dialog>
+        </ErrorBoundary>
+      </Page>
+    </Loading>
   );
 };

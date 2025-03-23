@@ -24,6 +24,8 @@ public static class JobEndpoints
     {
         var query = indexes.Types;
 
+        await Task.Delay(5000);
+
         var total = indexes.TotalCount ;
 
         var items = query.Page(page, size).Select(x => x.Adapt<JobDefinationDto>()).ToList();
