@@ -30,6 +30,5 @@ const toggleTheme = (e) =>
     const checked = e.checked;
     const theme = e.value
 
-    debugger;
     window.blazorInterop.setCookie("theme", checked ? theme : '');
 }
