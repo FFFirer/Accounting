@@ -24,6 +24,7 @@ import {
   createSignal,
   ErrorBoundary,
   on,
+  onMount,
 } from "solid-js";
 import { IndexColumn, Table, TableColumn, TableRow } from "solid-table-context";
 import ErrorReset from "@frontend/components/ErrorReset";
@@ -31,10 +32,13 @@ import { BsPlus } from "solid-icons/bs";
 import FormSubmit from "@frontend/components/FormInputs/FormSubmit";
 import FormInputText from "@frontend/components/FormInputs/FormInputText";
 import {
+  AutoFocusFormInputs,
   Dialog,
   DialogAction,
   DialogCloseButton,
   DialogTopCloseButton,
+  IDialogShell,
+  useDialog,
 } from "@frontend/components/Dialog";
 import {
   ConvertError,
@@ -63,24 +67,22 @@ export default () => {
 
   const jobs = createMemo(() => resource()?.datas);
 
-  let modalRef: any;
-
-  const closeModal = () => modalRef?.close();
+  const dialogShell = useDialog();
 
   const createJobDetail = (data: JobDefinationDto) => {
     form()?.setValue({
       className: data.fullName,
     });
-    modalRef?.showModal();
+
+    dialogShell.show();
   };
 
   const handleSubmit = (values: any) => {
-
     detailClient
       .postApiJobDetailCreate(CreateJobDetailRequest.fromJS(values))
       .then((result) => {
         if (result.succeeded) {
-          modalRef?.close();
+          dialogShell.close();
           Toast.fire({ icon: "success", title: "添加成功" });
           return Promise.resolve(true);
         } else {
@@ -97,7 +99,7 @@ export default () => {
           icon: "error",
           title: "发生异常",
           html: ConvertError(error),
-          target: modalRef,
+          target: dialogShell.ref(),
         })
       );
   };
@@ -138,7 +140,11 @@ export default () => {
           </Table>
         </div>
         <Pagination class=" rounded-box" state={pagination}></Pagination>
-        <Dialog ref={modalRef} onClose={handleClose}>
+        <Dialog
+          shell={dialogShell}
+          onClose={handleClose}
+          onShow={AutoFocusFormInputs(dialogShell.ref())}
+        >
           <DialogTopCloseButton />
 
           <h3 class="text-lg font-bold mb-3">添加一个新的任务实例</h3>
@@ -148,7 +154,11 @@ export default () => {
               <div class="mb-2">
                 <label class="input">
                   Class Name
-                  <FormInputText tabIndex={0} class="grow" readonly></FormInputText>
+                  <FormInputText
+                    tabIndex={0}
+                    class="grow"
+                    readonly
+                  ></FormInputText>
                 </label>
               </div>
             </FormField>
@@ -157,7 +167,8 @@ export default () => {
                 <label class="input">
                   Group
                   <FormInputText
-                    tabIndex={1} autofocus
+                    tabIndex={1}
+                    autofocus
                     class="grow"
                     placeholder="给任务一个分组名称"
                   ></FormInputText>
@@ -168,14 +179,22 @@ export default () => {
               <div class="mb-2">
                 <label class="input">
                   Name
-                  <FormInputText tabIndex={2} class="grow" placeholder="给任务起个名字" />
+                  <FormInputText
+                    tabIndex={2}
+                    class="grow"
+                    placeholder="给任务起个名字"
+                  />
                 </label>
               </div>
             </FormField>
 
             <DialogAction>
-              <FormSubmit tabIndex={3} class="btn btn-outline">创建</FormSubmit>
-              <DialogCloseButton tabIndex={4} class=" relative">取消</DialogCloseButton>
+              <FormSubmit tabIndex={3} class="btn btn-outline">
+                创建
+              </FormSubmit>
+              <DialogCloseButton tabIndex={4} class=" relative">
+                取消
+              </DialogCloseButton>
             </DialogAction>
           </Form>
         </Dialog>

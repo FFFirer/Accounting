@@ -1,20 +1,27 @@
 import { cn } from "@frontend/utils/classHelper";
 import {
+  Accessor,
   createEffect,
   createMemo,
   createRenderEffect,
+  createSignal,
   JSX,
+  mergeProps,
   on,
   ParentProps,
   Ref,
+  Setter,
   Show,
   splitProps,
 } from "solid-js";
 import { Portal } from "solid-js/web";
 
 export interface DialogProps
-  extends JSX.DialogHtmlAttributes<HTMLDialogElement> {
+  extends Omit<JSX.DialogHtmlAttributes<HTMLDialogElement>, "onClose"> {
   backdrop?: "static";
+  onShow?: () => void;
+  shell?: IDialogShell;
+  onClose?: () => void;
 }
 
 export const DialogAction = (
@@ -68,12 +75,75 @@ export const DialogContainer = () => {
   return <div style={{ "z-index": "100" }} id="dialog_container"></div>;
 };
 
+export interface IDialogShell {
+  show: () => void;
+  close: () => void;
+  open: Accessor<boolean>;
+  setOpen: Setter<boolean>;
+  ref: Accessor<HTMLDialogElement | undefined>;
+  setRef: Setter<HTMLDialogElement | undefined>;
+}
+
+export const useDialog: () => IDialogShell = () => {
+  const [ref, setRef] = createSignal<HTMLDialogElement>();
+
+  const [open, setOpen] = createSignal(false);
+
+  const show = () => {
+    ref()?.showModal();
+    setOpen(true);
+  };
+
+  const close = () => {
+    ref()?.close();
+    setOpen(false);
+  };
+
+  return {
+    show,
+    close,
+    ref,
+    setRef,
+    open,
+    setOpen,
+  };
+};
+
 export const Dialog = (props: ParentProps<DialogProps>) => {
-  const [local, others] = splitProps(props, ["class", "classList", "backdrop"]);
+  const [local, others] = splitProps(
+    mergeProps({ shell: useDialog() }, props),
+    ["class", "classList", "backdrop", "onShow", "shell", "onClose"]
+  );
+
+  const actualOpen = createMemo(() => {
+    if (local.shell.open()) {
+    } else {
+    }
+
+    return local.shell.ref()?.hasAttribute("open");
+  });
+
+  createEffect(
+    on(actualOpen, (v) => {
+      if (v) {
+        () => local.onShow?.();
+      }
+    })
+  );
+
+  const handleClose = () => {
+    local.onClose?.();
+    local.shell.setOpen(false);
+  };
 
   return (
     <Portal mount={document.querySelector("body")!}>
-      <dialog {...others} class={cn("modal", local.class, local.classList)}>
+      <dialog
+        {...others}
+        ref={local.shell.setRef}
+        class={cn("modal", local.class, local.classList)}
+        onClose={handleClose}
+      >
         <div class="modal-box">{props.children}</div>
         <Show when={local.backdrop !== "static"}>
           <form method="dialog" class="modal-backdrop">
@@ -83,4 +153,8 @@ export const Dialog = (props: ParentProps<DialogProps>) => {
       </dialog>
     </Portal>
   );
+};
+
+export const AutoFocusFormInputs = (el?: HTMLElement) => {
+  return () => setTimeout(() => el?.querySelector("[autofocus]")?.focus(), 100);
 };
