@@ -126,7 +126,7 @@ export const Dialog = (props: ParentProps<DialogProps>) => {
   createEffect(
     on(actualOpen, (v) => {
       if (v) {
-        () => local.onShow?.();
+        setTimeout(() => local.onShow?.(), 50); // 防止要对dialog内容操作但是还未展示
       }
     })
   );
@@ -156,5 +156,5 @@ export const Dialog = (props: ParentProps<DialogProps>) => {
 };
 
 export const AutoFocusFormInputs = (el?: HTMLElement) => {
-  return () => setTimeout(() => el?.querySelector("[autofocus]")?.focus(), 100);
-};
+  return () => el?.querySelector("[autofocus]")?.focus();
+}

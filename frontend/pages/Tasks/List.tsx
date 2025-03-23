@@ -107,7 +107,6 @@ export default () => {
   const [form, setForm] = createSignal<IFormInstance | undefined>();
 
   const handleClose = () => {
-    console.log("modal closed!");
     form()?.setValue({});
   };
 
