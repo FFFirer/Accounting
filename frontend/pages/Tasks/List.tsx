@@ -36,7 +36,11 @@ import {
   DialogCloseButton,
   DialogTopCloseButton,
 } from "@frontend/components/Dialog";
-import { DisplayErrors, DisplayException } from "@frontend/utils/DisplayError";
+import {
+  ConvertError,
+  DisplayErrors,
+  DisplayException,
+} from "@frontend/utils/DisplayError";
 import { solidSwal } from "@frontend/utils/swal2";
 import ErrorsTable from "@frontend/components/ErrorsTable";
 import { Toast } from "@frontend/components/Toast";
@@ -70,34 +74,31 @@ export default () => {
   };
 
   const handleSubmit = (values: any) => {
-    console.log("submit!", values);
 
     detailClient
       .postApiJobDetailCreate(CreateJobDetailRequest.fromJS(values))
       .then((result) => {
         if (result.succeeded) {
           modalRef?.close();
-          toast.success("添加成功");
+          Toast.fire({ icon: "success", title: "添加成功" });
           return Promise.resolve(true);
         } else {
-          return solidSwal
-            .fire({
-              icon: "error",
-              title: "发生错误",
-              html: <ErrorsTable errors={result.errors} />,
-            })
-            .then((v) => v.isConfirmed);
+          solidSwal.fire({
+            icon: "error",
+            title: "发生错误",
+            html: <ErrorsTable errors={result.errors} />,
+          });
+          return Promise.resolve(false);
         }
       })
-      // .catch(error => solidSwal.fire({
-      //   icon: "error",
-      //   title: "发生异常",
-      //   html: error.detail,
-      //   target: modalRef
-      // }));
-      .catch((error) => Toast.fire({ icon: 'error', title: "Error", target: modalRef}));
-
-    // modalRef?.close();
+      .catch((error) =>
+        solidSwal.fire({
+          icon: "error",
+          title: "发生异常",
+          html: ConvertError(error),
+          target: modalRef,
+        })
+      );
   };
 
   const [form, setForm] = createSignal<IFormInstance | undefined>();
@@ -125,7 +126,7 @@ export default () => {
               {(data) => (
                 <button
                   type="button"
-                  class="btn btn-primary btn-xs"
+                  class="btn btn-primary btn-xs text-nowrap"
                   onClick={() => createJobDetail(data)}
                 >
                   <BsPlus size={20} />
@@ -175,7 +176,6 @@ export default () => {
               <DialogCloseButton class=" relative">取消</DialogCloseButton>
             </DialogAction>
           </Form>
-
         </Dialog>
       </ErrorBoundary>
     </div>

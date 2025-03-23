@@ -13,6 +13,7 @@ public static class ServiceCollectionExtensions
         var jobs = JobScanner.LoadJobTypes(typeof(ServiceCollectionExtensions).Assembly);
 
         services.AddSingleton<JobIndexes>(new JobIndexes(jobs));
+        services.AddSingleton<JobErrorDescriber>();
 
         return services;
     }

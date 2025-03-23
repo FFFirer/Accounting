@@ -4,6 +4,7 @@ import { solidSwal } from "./swal2";
 import { Table, TableColumn } from "solid-table-context";
 import { HttpValidationProblemDetails } from "./ProblemDetails";
 import ErrorsTable from "@frontend/components/ErrorsTable";
+import { JSXElement } from "solid-js";
 
 export const DisplayIdentityError = (e: any[] | unknown) => {
   return Array.isArray(e)
@@ -19,6 +20,18 @@ export const DisplayErrors = (errors?: ErrorDto[]) => {
     title: "发生错误",
     html: <ErrorsTable errors={errors} />,
   });
+};
+
+export const ConvertError = (error: any) => {
+  if (HttpValidationProblemDetails.isHttpValidationProblemDetails(error)) {
+    return error.detail;
+  }
+
+  if(ApiException.isApiException(error)) {
+    return error.message;
+  }
+
+  return error.message;
 };
 
 export const DisplayException = (error: any) => {
