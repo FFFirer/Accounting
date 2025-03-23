@@ -154,7 +154,7 @@ export default () => {
                 <label class="input">
                   Class Name
                   <FormInputText
-                    tabIndex={0}
+                    tabIndex={1}
                     class="grow"
                     readonly
                   ></FormInputText>
@@ -166,7 +166,7 @@ export default () => {
                 <label class="input">
                   Group
                   <FormInputText
-                    tabIndex={1}
+                    tabIndex={2}
                     autofocus
                     class="grow"
                     placeholder="给任务一个分组名称"
@@ -179,7 +179,7 @@ export default () => {
                 <label class="input">
                   Name
                   <FormInputText
-                    tabIndex={2}
+                    tabIndex={3}
                     class="grow"
                     placeholder="给任务起个名字"
                   />
@@ -188,10 +188,10 @@ export default () => {
             </FormField>
 
             <DialogAction>
-              <FormSubmit tabIndex={3} class="btn btn-outline">
+              <FormSubmit tabIndex={4} class="btn btn-outline">
                 创建
               </FormSubmit>
-              <DialogCloseButton tabIndex={4} class=" relative">
+              <DialogCloseButton tabIndex={5} class=" relative">
                 取消
               </DialogCloseButton>
             </DialogAction>
