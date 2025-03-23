@@ -1,10 +1,13 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Accounting.Data;
 
 public class Result<T> : Result
 {
+    [JsonIgnore]
     private readonly T? _data;
 
     public T? Data => _data;

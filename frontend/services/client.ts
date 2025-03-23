@@ -61,6 +61,44 @@ export class JobDetailClient {
         }
         return Promise.resolve<PageListOfJobDetailDto>(null as any);
     }
+
+    postApiJobDetailCreate(request: CreateJobDetailRequest): Promise<Result> {
+        let url_ = this.baseUrl + "/api/JobDetail/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processPostApiJobDetailCreate(_response);
+        });
+    }
+
+    protected processPostApiJobDetailCreate(response: Response): Promise<Result> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Result>(null as any);
+    }
 }
 
 export class JobClient {
@@ -377,6 +415,138 @@ export interface IJobDetailDto {
     isNonConcurrent?: boolean;
     isUpdateData?: boolean;
     requestsRecovery?: boolean;
+}
+
+export class Result implements IResult {
+    errors?: ErrorDto[];
+    succeeded?: boolean;
+
+    constructor(data?: IResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [] as any;
+                for (let item of _data["errors"])
+                    this.errors!.push(ErrorDto.fromJS(item));
+            }
+            this.succeeded = _data["succeeded"];
+        }
+    }
+
+    static fromJS(data: any): Result {
+        data = typeof data === 'object' ? data : {};
+        let result = new Result();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        data["succeeded"] = this.succeeded;
+        return data;
+    }
+}
+
+export interface IResult {
+    errors?: ErrorDto[];
+    succeeded?: boolean;
+}
+
+export class ErrorDto implements IErrorDto {
+    code?: string;
+    description?: string | undefined;
+
+    constructor(data?: IErrorDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): ErrorDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ErrorDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        data["description"] = this.description;
+        return data;
+    }
+}
+
+export interface IErrorDto {
+    code?: string;
+    description?: string | undefined;
+}
+
+export class CreateJobDetailRequest implements ICreateJobDetailRequest {
+    className?: string;
+    group?: string;
+    name?: string;
+
+    constructor(data?: ICreateJobDetailRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.className = _data["className"];
+            this.group = _data["group"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): CreateJobDetailRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateJobDetailRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["className"] = this.className;
+        data["group"] = this.group;
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface ICreateJobDetailRequest {
+    className?: string;
+    group?: string;
+    name?: string;
 }
 
 export class PageListOfJobDefinationDto implements IPageListOfJobDefinationDto {

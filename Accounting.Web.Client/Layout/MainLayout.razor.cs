@@ -28,7 +28,7 @@ public partial class MainLayout : LayoutComponentBase, IAsyncDisposable
         this.DefaultNavs = GetNavsFromUri(this.NavigationManager?.Uri);
 
         if(this.Env?.Environment == "Development") {
-            this.DefaultNavs.Add(SwaggerNav);
+            this.DefaultNavs =  this.DefaultNavs.Concat([SwaggerNav]).ToList();
         }
 
         if (this.NavigationManager is not null)

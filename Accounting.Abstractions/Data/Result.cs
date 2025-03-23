@@ -1,13 +1,23 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Accounting.Data;
 
 public class Result
 {
+    [JsonIgnore]
     protected static readonly Result _success = new Result(true);
+
+    [JsonIgnore]
     protected bool _succeeded { get; set; }
+
+    [JsonIgnore]
     protected virtual List<Error> _errors { get; set; } = [];
+
+    public IEnumerable<Error> Errors => _errors;
+
     public virtual bool Succeeded => _succeeded;
 
     protected Result(bool succeeded)

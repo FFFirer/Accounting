@@ -2,7 +2,13 @@ import {
   createPaginationState,
   Pagination,
 } from "@frontend/components/Pagination";
-import { JobClient, JobDefinationDto } from "@frontend/services/client";
+import {
+  ApiException,
+  CreateJobDetailRequest,
+  JobClient,
+  JobDefinationDto,
+  JobDetailClient,
+} from "@frontend/services/client";
 import { useClient } from "@frontend/utils/useHelper";
 import { OcSearch3 } from "solid-icons/oc";
 import {
@@ -30,8 +36,13 @@ import {
   DialogCloseButton,
   DialogTopCloseButton,
 } from "@frontend/components/Dialog";
+import { DisplayErrors, DisplayException } from "@frontend/utils/DisplayError";
+import { solidSwal } from "@frontend/utils/swal2";
+import ErrorsTable from "@frontend/components/ErrorsTable";
+import { Toast } from "@frontend/components/Toast";
 
 const client = useClient(JobClient);
+const detailClient = useClient(JobDetailClient);
 
 export default () => {
   const pagination = createPaginationState({ index: 1, size: 20 });
@@ -60,7 +71,33 @@ export default () => {
 
   const handleSubmit = (values: any) => {
     console.log("submit!", values);
-    modalRef?.close();
+
+    detailClient
+      .postApiJobDetailCreate(CreateJobDetailRequest.fromJS(values))
+      .then((result) => {
+        if (result.succeeded) {
+          modalRef?.close();
+          toast.success("添加成功");
+          return Promise.resolve(true);
+        } else {
+          return solidSwal
+            .fire({
+              icon: "error",
+              title: "发生错误",
+              html: <ErrorsTable errors={result.errors} />,
+            })
+            .then((v) => v.isConfirmed);
+        }
+      })
+      // .catch(error => solidSwal.fire({
+      //   icon: "error",
+      //   title: "发生异常",
+      //   html: error.detail,
+      //   target: modalRef
+      // }));
+      .catch((error) => Toast.fire({ icon: 'error', title: "Error", target: modalRef}));
+
+    // modalRef?.close();
   };
 
   const [form, setForm] = createSignal<IFormInstance | undefined>();
@@ -138,6 +175,7 @@ export default () => {
               <DialogCloseButton class=" relative">取消</DialogCloseButton>
             </DialogAction>
           </Form>
+
         </Dialog>
       </ErrorBoundary>
     </div>

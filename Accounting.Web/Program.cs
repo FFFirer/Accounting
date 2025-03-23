@@ -31,6 +31,8 @@ Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
 
+builder.Services.AddProblemDetails();
+
 builder.Services
     .AddDbContext<AccountingDbContext>(
         options => options.UseNpgsql(builder.Configuration.GetConnectionString(DefaultConnectionName)));

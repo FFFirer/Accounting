@@ -10,6 +10,7 @@ import {
   Show,
   splitProps,
 } from "solid-js";
+import { Portal } from "solid-js/web";
 
 export interface DialogProps
   extends JSX.DialogHtmlAttributes<HTMLDialogElement> {
@@ -63,21 +64,23 @@ export const DialogTopCloseButton = (
   );
 };
 
+export const DialogContainer = () => {
+  return <div style={{ "z-index": "100" }} id="dialog_container"></div>;
+};
+
 export const Dialog = (props: ParentProps<DialogProps>) => {
-  const [local, others] = splitProps(props, [
-    "class",
-    "classList",
-    "backdrop",
-  ]);
+  const [local, others] = splitProps(props, ["class", "classList", "backdrop"]);
 
   return (
-    <dialog {...others} class={cn("modal", local.class, local.classList)}>
-      <div class="modal-box">{props.children}</div>
-      <Show when={local.backdrop !== "static"}>
-        <form method="dialog" class="modal-backdrop">
-          <button>close</button>
-        </form>
-      </Show>
-    </dialog>
+    <Portal mount={document.querySelector("body")!}>
+      <dialog {...others} class={cn("modal", local.class, local.classList)}>
+        <div class="modal-box">{props.children}</div>
+        <Show when={local.backdrop !== "static"}>
+          <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+          </form>
+        </Show>
+      </dialog>
+    </Portal>
   );
 };
