@@ -1,18 +1,47 @@
 import { cn } from "@frontend/utils/classHelper";
-import { JSXElement, ParentProps, Show } from "solid-js";
+import {
+  createRenderEffect,
+  JSX,
+  JSXElement,
+  mergeProps,
+  onMount,
+  ParentProps,
+  Show,
+  splitProps,
+} from "solid-js";
 
-export interface PageProps {
-  title?: string;
-  class?: string;
+export interface PageProps extends JSX.HTMLAttributes<HTMLDivElement> {
+  autoFocus?: boolean;
 }
 
 export default (props: ParentProps<PageProps>) => {
+  const [local, others] = splitProps(
+    mergeProps({ tabIndex: 0, autoFocus: true }, props),
+    ["title", "class", "classList", "ref", "autoFocus", "children"]
+  );
+
+  let ref: any;
+
+  onMount(() => {
+    if (local.autoFocus && ref) {
+      ref!.focus();
+    }
+  });
+
   return (
-    <div class={cn("size-full flex flex-col flex-1", props.class)}>
-      <Show when={props.title}>
-        <h1 class="mb-2">{props.title}</h1>
+    <div
+      ref={ref}
+      {...others}
+      class={cn(
+        " focus:outline-0 size-full flex flex-col flex-1",
+        local.class,
+        local.classList
+      )}
+    >
+      <Show when={local.title}>
+        <h1 class="mb-2">{local.title}</h1>
       </Show>
-      {props.children}
+      {local.children}
     </div>
   );
 };

@@ -10,21 +10,22 @@
     </div>
   </div>
   <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-    <li>
-
-      <NavLink href="/Profile" ActiveClass="active" class="justify-between">
-        Profile
-      </NavLink>
-    </li>
-    <li>
-      <NavLink href="/Settings" ActiveClass="menu-active">Settings</NavLink>
-    </li>
-    <li>
-      <NavLink href="/Files" ActiveClass="menu-active">Files</NavLink>
-    </li>
-    <li>
-      <NavLink href="/app/Tasks" data-enhance-nav="false" data-not-solid="true" data-active-class="menu-active" ActiveClass="menu-active">Tasks</NavLink>
-    </li>
+    @foreach (var nav in NavModels)
+    {
+      <li>
+        @if (nav.clientNav)
+        {
+          <NavLink href="@nav.Path" tabindex="-1" data-enhance-nav="false" data-not-solid="true"
+            data-active-class="menu-active" ActiveClass="menu-active">@nav.Name</NavLink>
+        }
+        else
+        {
+          <NavLink href="@nav.Path" ActiveClass="active" class="justify-between">
+            @nav.Name
+          </NavLink>
+        }
+      </li>
+    }
     <li>
       <form method="post" action="/Account/Logout">
         <AntiforgeryToken></AntiforgeryToken>
@@ -38,6 +39,9 @@
 @code {
 
   private string? currentUrl;
+
+  static NavModel[] NavModels = [new("/Profile", "Profile"), new("/Settings",
+"Settings"),new("/Files","Files"),new("/app/Tasks", "Tasks", true)];
 
   protected override void OnInitialized()
   {

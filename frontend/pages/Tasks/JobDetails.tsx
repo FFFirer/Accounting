@@ -1,4 +1,5 @@
 import ErrorReset from "@frontend/components/ErrorReset";
+import Page from "@frontend/components/Page";
 import {
   createPaginationState,
   Pagination,
@@ -28,7 +29,7 @@ export default () => {
   );
 
   return (
-    <div class="size-full flex flex-1 flex-col">
+    <Page>
       <ErrorBoundary fallback={ErrorReset}>
         <div class="flex flex-row mb-2 gap-2">
           <button type="button" class="btn btn-primary" onclick={refetch}>
@@ -48,6 +49,6 @@ export default () => {
         </div>
         <Pagination class=" rounded-box" state={pagination} />
       </ErrorBoundary>
-    </div>
+    </Page>
   );
 };

@@ -110,7 +110,7 @@ export default () => {
   };
 
   return (
-    <Page title="任务定义">
+    <Page>
       <ErrorBoundary fallback={ErrorReset}>
         <div class="flex flex-row mb-2 gap-2">
           <button type="button" class="btn btn-primary" onclick={refetch}>
@@ -148,7 +148,7 @@ export default () => {
               <div class="mb-2">
                 <label class="input">
                   Class Name
-                  <FormInputText class="grow" readonly></FormInputText>
+                  <FormInputText tabIndex={0} class="grow" readonly></FormInputText>
                 </label>
               </div>
             </FormField>
@@ -157,6 +157,7 @@ export default () => {
                 <label class="input">
                   Group
                   <FormInputText
+                    tabIndex={1} autofocus
                     class="grow"
                     placeholder="给任务一个分组名称"
                   ></FormInputText>
@@ -167,14 +168,14 @@ export default () => {
               <div class="mb-2">
                 <label class="input">
                   Name
-                  <FormInputText class="grow" placeholder="给任务起个名字" />
+                  <FormInputText tabIndex={2} class="grow" placeholder="给任务起个名字" />
                 </label>
               </div>
             </FormField>
 
             <DialogAction>
-              <FormSubmit class="btn btn-outline">创建</FormSubmit>
-              <DialogCloseButton class=" relative">取消</DialogCloseButton>
+              <FormSubmit tabIndex={3} class="btn btn-outline">创建</FormSubmit>
+              <DialogCloseButton tabIndex={4} class=" relative">取消</DialogCloseButton>
             </DialogAction>
           </Form>
         </Dialog>

@@ -92,7 +92,7 @@ export const Pagination = (
   return (
     <ul class={cn(" menu-horizontal join", local.class, local.classList)} {...others}>
       <li class="pagination-total hover:shadow-none">
-        <div class="btn bg-white border-none hover:shadow-none cursor-text">
+        <div class="btn border-none hover:shadow-none cursor-text">
           <span class="font-medium">Total</span>
           <span>{local.state.totalCount()}</span>
           <span class="font-medium">items</span>
