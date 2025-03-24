@@ -6,6 +6,13 @@
 - 使用 YARP 开发时反向代理
 - 使用 PostgreSQL 作为数据库
 
+## 设计
+
+- 以ASP.NET Core Blazor提供服务端能力，提供身份认证及授权，嵌入由solidjs编写的单页应用（支持路由）。
+- 开发时使用`Vite`的DevServer响应热更新。
+- 最终发布时，可以将生成的静态资源放在`wwwroot`下或使用CDN部署。
+- 使用先进的前端生态。
+
 # Development
 
 ## 1. Restore packages
