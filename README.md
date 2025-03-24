@@ -15,7 +15,7 @@
 
 # Development
 
-## 1. Restore packages
+## Restore packages
 
 ```bash
 # 还原.net项目依赖
@@ -25,7 +25,7 @@ dotnet restore
 pnpm install
 ```
 
-## 2. Environment requirements
+## Environment requirements
 
 **VS Code**
 
@@ -35,7 +35,7 @@ pnpm install
   3. bradlc.vscode-tailwindcss
   4. hediet.vscode-drawio
 
-## 3. Run
+## Run
 
 使用命令行启动
 
@@ -51,7 +51,7 @@ dotnet run --project ./DevProxy/DevProxy.csproj -lp http
 dotnet watch run --project ./Accounting.Web/Account.Web.csproj -lp http-headless
 ```
 
-## 4. Debug
+## Debug
 
 **frontend**
 
