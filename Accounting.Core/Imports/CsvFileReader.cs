@@ -8,7 +8,7 @@ namespace Accounting.Imports;
 
 public class CsvFileReader
 {
-    public async Task<List<T>> ParseAsync<T>(string filePath, int skipRowsCount, CancellationToken cancellationToken)
+    public async Task<List<T>> ParseAsync<T>(string filePath, int skipRowsCount, ClassMap<T>? map, CancellationToken cancellationToken)
     {
         var encoding = Encoding.UTF8;
 
@@ -28,6 +28,11 @@ public class CsvFileReader
             configuration.ShouldSkipRecord += (args) => args.Row.Parser.RawRow <= skipRowsCount;
 
             var reader = new CsvReader(streamReader, configuration);
+
+            if (map is not null)
+            {
+                reader.Context.RegisterClassMap(map);
+            }
 
             await reader.ReadAsync();
             reader.ReadHeader();

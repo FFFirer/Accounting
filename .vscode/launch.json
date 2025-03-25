@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Edge",
+            "name": "(frontend) Launch Edge",
             "request": "launch",
             "type": "msedge",
             "url": "http://localhost:7008",

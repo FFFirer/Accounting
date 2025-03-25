@@ -12,5 +12,7 @@ public class ImportRecord
 
     public ImportChannel? Channel { get; set; }
 
-    public ICollection<ImportRecordItem> Items { get; set; } = [];
+    public ImportStatus? Status { get; set; }
+
+    public int Count { get; set; }
 }

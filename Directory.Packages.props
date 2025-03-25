@@ -9,6 +9,7 @@
     <PackageVersion Include="AppAny.Quartz.EntityFrameworkCore.Migrations.PostgreSQL" Version="0.5.1" />
     <PackageVersion Include="CommandLineParser" Version="2.9.1" />
     <PackageVersion Include="CsvHelper" Version="33.0.1" />
+    <PackageVersion Include="EFCore.BulkExtensions.PostgreSql" Version="9.0.1" />
     <PackageVersion Include="FluentValidation" Version="8.2.2" />
     <PackageVersion Include="MailKit" Version="2.5.2" />
     <PackageVersion Include="Mapster" Version="7.4.0" />

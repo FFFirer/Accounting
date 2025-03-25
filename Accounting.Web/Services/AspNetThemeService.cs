@@ -6,7 +6,6 @@ public sealed class AspNetThemeService : IThemeService
 {
     private readonly IHttpContextAccessor _accessor;
 
-    public event Action OnChange = default!;
     public AspNetThemeService(IHttpContextAccessor accessor)
     {
         _accessor = accessor;

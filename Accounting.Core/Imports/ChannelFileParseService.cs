@@ -1,3 +1,4 @@
+using Accounting.Books;
 using Accounting.Data;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +13,7 @@ public class ChannelFileParseService
         this.ServiceProvider = serviceProvider;
     }
 
-    public async Task<Result> ParseAsync(ImportRecord record, CancellationToken cancellationToken)
+    public async Task<Result<List<LedgerRecord>>> ParseAsync(ImportRecord record, CancellationToken cancellationToken)
     {
         IChannelFileParser parser = GetChannelFileParser(record);
 

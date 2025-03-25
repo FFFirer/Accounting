@@ -34,8 +34,7 @@ namespace Accounting
         public DbSet<LedgerRecordAttachment> LedgerRecordAttachments => Set<LedgerRecordAttachment>();
 
         public DbSet<ImportRecord> ImportRecords => Set<ImportRecord>();
-        public DbSet<ImportRecordItem> ImportRecordItems => Set<ImportRecordItem>();
-
+      
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
             base.ConfigureConventions(configurationBuilder);
@@ -49,8 +48,6 @@ namespace Accounting
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-
 
             var documentEntity = builder.Entity<Document>();
 

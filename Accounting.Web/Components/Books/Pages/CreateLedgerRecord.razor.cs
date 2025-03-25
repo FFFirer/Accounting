@@ -72,7 +72,7 @@ public partial class CreateLedgerRecord : ComponentBase
         }
 
         var ledgerRecord = this.Input.Adapt<LedgerRecord>();
-        ledgerRecord.Ledger = this.Ledger;
+        ledgerRecord.LedgerId = this.Ledger.Id;
         ledgerRecord.AssetAccount = this.Ledger.AssetAccounts?.Where(x => x.Id == this.Input.AssetAccountId).FirstOrDefault();
 
         AccountingDb.LedgerRecords.Add(ledgerRecord);

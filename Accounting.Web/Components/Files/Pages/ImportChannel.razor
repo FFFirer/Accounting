@@ -75,11 +75,11 @@
 
         var req = new ImportChannelFileNotification
         {
-            Record = new ImportRecord
-            {
+            Record = new Imports.ImportRecord {
                 File = result.Data,
                 Channel = ImportChannels.Parse(Input.Channel!),
-                CreatedTime = DateTimeOffset.UtcNow
+                CreatedTime = DateTimeOffset.UtcNow,
+                Status = ImportStatus.None,
             }
         };
 

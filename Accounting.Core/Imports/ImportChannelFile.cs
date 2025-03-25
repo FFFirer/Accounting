@@ -1,3 +1,4 @@
+using Accounting.Books;
 using MediatR;
 
 namespace Accounting.Imports;
@@ -5,9 +6,9 @@ namespace Accounting.Imports;
 public class ImportChannelFileNotificationHandler : INotificationHandler<ImportChannelFileNotification>
 {
     protected virtual ChannelFileParseService Service { get; set; }
-    protected virtual IImportRecordStore Store { get; set; }
+    protected virtual ILedgerStore Store { get; set; }
 
-    public ImportChannelFileNotificationHandler(ChannelFileParseService service, IImportRecordStore store)
+    public ImportChannelFileNotificationHandler(ChannelFileParseService service, ILedgerStore store)
     {
         this.Service = service;
         this.Store = store;
@@ -24,11 +25,11 @@ public class ImportChannelFileNotificationHandler : INotificationHandler<ImportC
 
         result.ThrowIfFailed();
 
-        if (notification.Record.Items.IsNullOrEmpty())
+        if (result.Data.IsNullOrEmpty())
         {
             return;
         }
 
-        await Store.SaveItemsAsync(notification.Record.Items.ToList(), cancellationToken);
+        await Store.BulkSaveChannelRecordsAsync(result.Data, cancellationToken);
     }
 }

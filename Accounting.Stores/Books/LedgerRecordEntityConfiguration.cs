@@ -14,13 +14,13 @@ public class LedgerRecordEntityConfiguration : IEntityTypeConfiguration<LedgerRe
 {
     public void Configure(EntityTypeBuilder<LedgerRecord> builder)
     {
-        builder.HasKey(x => x.Id);
+        builder.HasKey(x => new { x.SourceChannelCode, x.SourceChannelId });
 
         builder.Property(x => x.FlowDirection)
             .HasConversion(
-               v => v.ToString(),
-               s => (AssetFlowDirection)Enum.Parse(typeof(AssetFlowDirection), s));
+               v => v == null ? null : v.ToString(),
+               s => string.IsNullOrWhiteSpace(s) ? null : (AssetFlowDirection)Enum.Parse(typeof(AssetFlowDirection), s));
 
-        builder.HasMany(x => x.Tags).WithMany();
+        builder.Property(x => x.Tags).HasColumnType("text[]");
     }
 }

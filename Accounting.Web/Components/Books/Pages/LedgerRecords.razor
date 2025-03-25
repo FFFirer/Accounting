@@ -20,7 +20,7 @@
 
     <div class="grow overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
         <QuickGrid class="table" TGridItem="LedgerRecord" ItemsProvider="GetLedgerRecords">
-            <PropertyColumn Property="p => p.RecordTime" Format="yyyy-MM-dd HH:mm:ss"></PropertyColumn>
+            <PropertyColumn Property="p => p.PayTime" Format="yyyy-MM-dd HH:mm:ss"></PropertyColumn>
             <TemplateColumn Context="record" Title="收支">
                 @(record.FlowDirection == Asset.AssetFlowDirection.Expenditure ? "支出" : "收入")
             </TemplateColumn>

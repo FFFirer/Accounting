@@ -20,20 +20,4 @@ public class ImportRecordStore : AccountingBaseStore, IImportRecordStore
 
         await SaveChanges(cancellationToken);
     }
-
-    public async Task SaveItemsAsync(List<ImportRecordItem> items, CancellationToken cancellationToken)
-    {
-        var createItems = new List<ImportRecordItem>();
-        var updateItems = new List<ImportRecordItem>();
-
-        if(createItems.IsNullOrEmpty() == false) {
-            await this.Context.AddRangeAsync(createItems);
-        }
-        
-        if(updateItems.IsNullOrEmpty() == false) {
-            this.Context.UpdateRange(updateItems);
-        }
-
-        await SaveChanges(cancellationToken);
-    }
 }
