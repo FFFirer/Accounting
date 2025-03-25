@@ -88,52 +88,7 @@ public class FileSystemFileStorageService : IFileStorageService, IFileUploadServ
 
     public async Task<Result> UploadAsync(string uploadToken, string originalFileName, IBrowserFile uploadFile, Action<FileUploadOptions>? configureUploadOptions = null, CancellationToken cancellationToken = default)
     {
-        Validate();
-
-        var result = await ValidateTokenAsync(uploadToken);
-
-        if (result.Succeeded == false) { return result; }
-
-        var fileId = result.Data.FindFirstValue(TokenDefaults.UploadFileId);
-        var bucketName = result.Data.FindFirstValue(TokenDefaults.BucketName);
-
-        if (string.IsNullOrWhiteSpace(fileId))
-        {
-            return Result.Failed(Errors.NotExistsUploadFileId());
-        }
-
-        var saveDirectory = ResolveSaveDirectory(Options.Value.FileSystemPhysicalPath);
-        var tempFileName = Path.GetRandomFileName();
-
-        var upload = new FileUploadOptions();
-        configureUploadOptions?.Invoke(upload);
-
-        var fileInfo = new FileInformation
-        {
-            Id = Guid.Parse(fileId!),
-            OriginalFileName = originalFileName,
-            CreatedTime = DateTimeOffset.UtcNow,
-            StorageProvider = Options.Value.Provider!,
-            StoragePath = Path.Combine(saveDirectory, tempFileName),
-        };
-
-        MergeUploadOptions(fileInfo, upload);
-
-        using (var fs = new FileStream(fileInfo.StoragePath, FileMode.Create))
-        {
-            await uploadFile.OpenReadStream(maxAllowedSize: Options.Value.MaxFileSize).CopyToAsync(fs, cancellationToken);
-        }
-
-        if (string.IsNullOrWhiteSpace(bucketName) == false)
-        {
-            var bucket = await FileStorageStore.GetOrCreateBucketAsync(bucketName, cancellationToken);
-            fileInfo.Bucket = bucket;
-        }
-
-        await FileStorageStore.CreateAsync(fileInfo, cancellationToken);
-        await UpdateSavedFileInfo(fileInfo);
-
-        return Result.Success();
+        return await UploadAndGetAsync(uploadToken, originalFileName, uploadFile, configureUploadOptions, cancellationToken);
     }
 
     private string ResolveSaveDirectory(string path)
@@ -164,7 +119,7 @@ public class FileSystemFileStorageService : IFileStorageService, IFileUploadServ
         file.Deleted = true;
 
         await FileStorageStore.UpdateAsync(file, cancellationToken);
-        
+
         // TODO: EmitEvent FileDeleted
 
         if (file.DeleteWhenExpired)
@@ -227,6 +182,56 @@ public class FileSystemFileStorageService : IFileStorageService, IFileUploadServ
         var fileId = Guid.Parse(id);
 
         await DeleteAsync(fileId, cancellationToken);
+    }
+
+    public async Task<Result<FileInformation>> UploadAndGetAsync(string uploadToken, string originalFileName, IBrowserFile uploadFile, Action<FileUploadOptions>? configureUploadOptions = null, CancellationToken cancellationToken = default)
+    {
+        Validate();
+
+        var result = await ValidateTokenAsync(uploadToken);
+
+        if (result.Succeeded == false) { return Result<FileInformation>.Failed(result.Errors); }
+
+        var fileId = result.Data.FindFirstValue(TokenDefaults.UploadFileId);
+        var bucketName = result.Data.FindFirstValue(TokenDefaults.BucketName);
+
+        if (string.IsNullOrWhiteSpace(fileId))
+        {
+            return Result<FileInformation>.Failed(Errors.NotExistsUploadFileId());
+        }
+
+        var saveDirectory = ResolveSaveDirectory(Options.Value.FileSystemPhysicalPath);
+        var tempFileName = Path.GetRandomFileName();
+
+        var upload = new FileUploadOptions();
+        configureUploadOptions?.Invoke(upload);
+
+        var fileInfo = new FileInformation
+        {
+            Id = Guid.Parse(fileId!),
+            OriginalFileName = originalFileName,
+            CreatedTime = DateTimeOffset.UtcNow,
+            StorageProvider = Options.Value.Provider!,
+            StoragePath = Path.Combine(saveDirectory, tempFileName),
+        };
+
+        MergeUploadOptions(fileInfo, upload);
+
+        using (var fs = new FileStream(fileInfo.StoragePath, FileMode.Create))
+        {
+            await uploadFile.OpenReadStream(maxAllowedSize: Options.Value.MaxFileSize).CopyToAsync(fs, cancellationToken);
+        }
+
+        if (string.IsNullOrWhiteSpace(bucketName) == false)
+        {
+            var bucket = await FileStorageStore.GetOrCreateBucketAsync(bucketName, cancellationToken);
+            fileInfo.Bucket = bucket;
+        }
+
+        await FileStorageStore.CreateAsync(fileInfo, cancellationToken);
+        await UpdateSavedFileInfo(fileInfo);
+
+        return Result.Success(fileInfo);
     }
 
     private class TokenDefaults

@@ -8,9 +8,11 @@
   <ItemGroup>
     <PackageVersion Include="AppAny.Quartz.EntityFrameworkCore.Migrations.PostgreSQL" Version="0.5.1" />
     <PackageVersion Include="CommandLineParser" Version="2.9.1" />
+    <PackageVersion Include="CsvHelper" Version="33.0.1" />
     <PackageVersion Include="FluentValidation" Version="8.2.2" />
     <PackageVersion Include="MailKit" Version="2.5.2" />
     <PackageVersion Include="Mapster" Version="7.4.0" />
+    <PackageVersion Include="MediatR" Version="12.4.1" />
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.QuickGrid" Version="10.0.0-preview.1.25120.3" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.0-preview.1.25120.3" />
@@ -31,6 +33,7 @@
     <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.1-dev-00953" />
     <PackageVersion Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.6.1" />
+    <PackageVersion Include="UTF.Unknown" Version="2.5.1" />
     <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0-preview.1.25120.3" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.0-preview.1.25120.3" />

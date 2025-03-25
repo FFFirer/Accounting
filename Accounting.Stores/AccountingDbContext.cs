@@ -6,6 +6,7 @@ using Accounting.Asset;
 using Accounting.Books;
 using Accounting.Documents;
 using Accounting.FileStorage;
+using Accounting.Imports;
 using Accounting.ValueConverters;
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -31,6 +32,9 @@ namespace Accounting
         public DbSet<LedgerCategory> LedgerCategories => Set<LedgerCategory>();
         public DbSet<LedgerTag> LedgerTags => Set<LedgerTag>();
         public DbSet<LedgerRecordAttachment> LedgerRecordAttachments => Set<LedgerRecordAttachment>();
+
+        public DbSet<ImportRecord> ImportRecords => Set<ImportRecord>();
+        public DbSet<ImportRecordItem> ImportRecordItems => Set<ImportRecordItem>();
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

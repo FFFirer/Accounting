@@ -1,0 +1,122 @@
+@page "/Import/Channel"
+@attribute [Authorize]
+@rendermode InteractiveServer
+
+@using Accounting.FileStorage
+@using Accounting.Imports
+@using MediatR
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Mvc
+@using Microsoft.Extensions.Options
+@using System.ComponentModel.DataAnnotations
+
+@inject IOptions<FileStorageOptions> Options
+@inject IFileUploadService FileUploadService
+@inject IMediator MediatR
+
+<PageTitle>上传文件</PageTitle>
+
+<Alert Message="@Message" />
+
+<fieldset class="fieldset mb-3">
+    <legend class="fieldset-legend">账单来源</legend>
+    <InputSelect @bind-Value="Input.Channel" class="input">
+        <option>请选择...</option>
+        <option value="Alipay">支付宝</option>
+        <option value="WeChat">微信支付</option>
+    </InputSelect>
+</fieldset>
+<fieldset class="fieldset mb-3">
+    <legend class="fieldset-legend">上传位置</legend>
+    <InputText class="input w-full" id="Input.BucketName" placeholder="Bucket name..." @bind-Value="Input.BucketName" />
+</fieldset>
+<fieldset class="fieldset mb-3">
+    <legend class="fieldset-legend">选择文件</legend>
+    <InputFile class="file-input w-full" id="Input.File" OnChange="FileChanged" />
+    <label class="fieldset-label">文件大小不超过 @PrettySize</label>
+</fieldset>
+
+<button type="button" class="btn btn-primary" @onclick="UploadFile">上传</button>
+<NavLink class="btn btn-link" href="/Files">查看所有文件</NavLink>
+
+@code {
+    static UploadModelValidator Validator = new UploadModelValidator();
+    protected string? Message { get; set; }
+
+    public string PrettySize => Accounting.Common.DisplayHelper.PrettySizeDisplay(Options.Value.MaxFileSize);
+
+    [CascadingParameter]
+    protected HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    private UploadModel Input { get; set; } = new();
+
+    public async Task UploadFile()
+    {
+        var validationResult = Validator.Validate(this.Input);
+
+        if (validationResult.IsValid == false)
+        {
+            Message = "Error: " + string.Join(";", validationResult.Errors.Select(x => x.ErrorMessage));
+            return;
+        }
+
+        var token = await FileUploadService.GetUploadTokenAsync(this.Input.BucketName, default);
+        var result = await FileUploadService.UploadAndGetAsync(token, Input.File!.Name, Input.File, null);
+
+        Input.File = null;
+
+        if (result.Succeeded) { Message = "上传成功"; }
+        else
+        {
+            Message = "Error: " + result.ToString();
+            return;
+        }
+
+        var req = new ImportChannelFileNotification
+        {
+            Record = new ImportRecord
+            {
+                File = result.Data,
+                Channel = ImportChannels.Parse(Input.Channel!),
+                CreatedTime = DateTimeOffset.UtcNow
+            }
+        };
+
+        await MediatR.Publish(req);
+    }
+
+    private Task FileChanged(InputFileChangeEventArgs e)
+    {
+        Input.File = e.File;
+
+        return Task.CompletedTask;
+    }
+
+    private class UploadModel
+    {
+        [Required(AllowEmptyStrings = false)]
+        public string? Channel { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
+        public string? BucketName { get; set; } = "Default";
+
+        [Display(Name = "文件")]
+        [Required]
+        public IBrowserFile? File { get; set; }
+    }
+
+    private class UploadModelValidator : AbstractValidator<UploadModel>
+    {
+        public UploadModelValidator()
+        {
+            RuleFor(x => x.BucketName)
+            .NotEmpty()
+            .Must(x => x?.StartsWith('/') == false).WithMessage("不能以'/'开头");
+
+            RuleFor(x => x.File).NotEmpty();
+
+            RuleFor(x => x.Channel).NotEmpty();
+        }
+    }
+}

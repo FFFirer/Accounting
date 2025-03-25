@@ -13,8 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CsvHelper" />
     <PackageReference Include="MailKit" />
+    <PackageReference Include="MediatR" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    <PackageReference Include="UTF.Unknown" />
   </ItemGroup>
 
   <ItemGroup>

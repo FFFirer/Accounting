@@ -3,7 +3,7 @@ using System.Reflection;
 
 using Accounting.Common;
 using Accounting.FileStorage;
-
+using Accounting.Imports;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -25,6 +25,14 @@ public static class AccountingBuilderExtensions
 {
     public static AccountingBuilder AddAccountingCore(this IServiceCollection services)
     {
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AccountingBuilderExtensions).Assembly));
+    
+        services.AddTransient<CsvFileReader>();
+        services.AddTransient<ImportErrorDescriber>();
+        services.AddKeyedScoped<IChannelFileParser, AlipayFileParser>(ImportChannels.Alipay.Code);
+        services.AddKeyedScoped<IChannelFileParser, WeChatFileParser>(ImportChannels.WeChat.Code);
+        services.AddScoped<ChannelFileParseService>();
+
         return new AccountingBuilder(services);
     }
 
@@ -46,10 +54,10 @@ public static class AccountingBuilderExtensions
         builder.Services.TryAddScoped<IFileStorageServiceFactory, FileStorageServiceFactory>();
         builder.Services.TryAddKeyedScoped<IFileStorageService, FileSystemFileStorageService>(FileStorageProvider.FileSystem);
         builder.Services.TryAddKeyedScoped<IFileUploadService, FileSystemFileStorageService>(FileStorageProvider.FileSystem);
-        
-        builder.Services.AddScoped<IFileStorageService>(sp => 
+
+        builder.Services.AddScoped<IFileStorageService>(sp =>
             sp.GetRequiredService<IFileStorageServiceFactory>().GetService());
-        builder.Services.AddScoped<IFileUploadService>(sp => 
+        builder.Services.AddScoped<IFileUploadService>(sp =>
             sp.GetRequiredService<IFileStorageServiceFactory>().GetUploadService());
 
         return builder;

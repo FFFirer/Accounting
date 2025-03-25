@@ -24,12 +24,22 @@ using Serilog.Events;
 const string DefaultConnectionName = "Default";
 const string QuartzConnectionName = "Quartz";
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
-    .Enrich.FromLogContext()
     .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
     .CreateLogger();
+
+builder.Services.AddSerilog((services, lc) =>
+{
+    lc
+    .ReadFrom.Configuration(builder.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext()
+    .WriteTo.Console();
+});
 
 builder.Services.AddProblemDetails();
 
@@ -50,10 +60,6 @@ builder.Services.AddRazorComponents()
 builder.Services.AddOpenApiDocument();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddLogging(options =>
-{
-    options.AddSerilog(Log.Logger);
-});
 builder.Services.AddScoped<ICancellationTokenProvider>(sp => new CancellationTokenProvider(sp.GetService<IHttpContextAccessor>()?.HttpContext?.RequestAborted));
 
 builder.Services.AddHttpContextAccessor();
