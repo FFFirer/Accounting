@@ -1,5 +1,5 @@
 using System;
-
+using System.Security.Cryptography.X509Certificates;
 using Accounting.Asset;
 using Accounting.Common;
 
@@ -15,6 +15,7 @@ public class LedgerRecord
         decimal amount,
         string currency)
     {
+        Id = 0;
         Amount = amount;
         Currency = currency;
         CreatedTime = DateTimeOffset.UtcNow;
@@ -22,6 +23,8 @@ public class LedgerRecord
         SourceChannelCode = sourceCode;
         SourceChannelId = sourceId;
     }
+
+    public long Id { get; set; }
 
     /// <summary>
     /// 所属账本

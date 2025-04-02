@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Accounting.Migrations
 {
     [DbContext(typeof(AccountingDbContext))]
-    [Migration("20250325182916_Update_LedgerRecord_LastModifiedTime2Nullable")]
-    partial class Update_LedgerRecord_LastModifiedTime2Nullable
+    [Migration("20250402150713_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -144,9 +144,11 @@ namespace Accounting.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("SourceChannelCode")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("SourceChannelId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.PrimitiveCollection<string[]>("Tags")
@@ -181,6 +183,9 @@ namespace Accounting.Migrations
                     b.HasIndex("AssetAccountId");
 
                     b.HasIndex("LedgerId");
+
+                    b.HasIndex("SourceChannelCode", "SourceChannelId")
+                        .IsUnique();
 
                     b.ToTable("LedgerRecords");
                 });

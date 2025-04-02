@@ -104,11 +104,11 @@ namespace Accounting.Migrations
 
             modelBuilder.Entity("Accounting.Books.LedgerRecord", b =>
                 {
-                    b.Property<string>("SourceChannelCode")
-                        .HasColumnType("text");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
 
-                    b.Property<string>("SourceChannelId")
-                        .HasColumnType("text");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<decimal?>("Amount")
                         .HasColumnType("numeric");
@@ -140,6 +140,14 @@ namespace Accounting.Migrations
                     b.Property<string>("Remark")
                         .HasColumnType("text");
 
+                    b.Property<string>("SourceChannelCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SourceChannelId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.PrimitiveCollection<string[]>("Tags")
                         .HasColumnType("text[]");
 
@@ -167,11 +175,14 @@ namespace Accounting.Migrations
                     b.Property<string>("TransactionType")
                         .HasColumnType("text");
 
-                    b.HasKey("SourceChannelCode", "SourceChannelId");
+                    b.HasKey("Id");
 
                     b.HasIndex("AssetAccountId");
 
                     b.HasIndex("LedgerId");
+
+                    b.HasIndex("SourceChannelCode", "SourceChannelId")
+                        .IsUnique();
 
                     b.ToTable("LedgerRecords");
                 });
@@ -193,17 +204,14 @@ namespace Accounting.Migrations
                     b.Property<DateTimeOffset>("LastModifiedTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("LedgerRecordSourceChannelCode")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LedgerRecordSourceChannelId")
-                        .HasColumnType("text");
+                    b.Property<long?>("LedgerRecordId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("FileId");
 
-                    b.HasIndex("LedgerRecordSourceChannelCode", "LedgerRecordSourceChannelId");
+                    b.HasIndex("LedgerRecordId");
 
                     b.ToTable("LedgerRecordAttachments");
                 });
@@ -665,7 +673,7 @@ namespace Accounting.Migrations
 
                     b.HasOne("Accounting.Books.LedgerRecord", null)
                         .WithMany("Attachments")
-                        .HasForeignKey("LedgerRecordSourceChannelCode", "LedgerRecordSourceChannelId");
+                        .HasForeignKey("LedgerRecordId");
 
                     b.Navigation("File");
                 });

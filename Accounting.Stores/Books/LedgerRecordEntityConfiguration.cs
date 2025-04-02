@@ -14,7 +14,9 @@ public class LedgerRecordEntityConfiguration : IEntityTypeConfiguration<LedgerRe
 {
     public void Configure(EntityTypeBuilder<LedgerRecord> builder)
     {
-        builder.HasKey(x => new { x.SourceChannelCode, x.SourceChannelId });
+        // builder.HasKey(x => new { x.SourceChannelCode, x.SourceChannelId });
+        builder.HasKey(x => x.Id);
+        builder.HasIndex(x => new { x.SourceChannelCode, x.SourceChannelId }).IsUnique();
 
         builder.Property(x => x.FlowDirection)
             .HasConversion(
