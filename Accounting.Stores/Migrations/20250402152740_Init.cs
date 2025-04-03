@@ -282,8 +282,8 @@ namespace Accounting.Migrations
                 name: "LedgerRecords",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    SourceChannelCode = table.Column<string>(type: "text", nullable: false),
+                    SourceChannelId = table.Column<string>(type: "text", nullable: false),
                     LedgerId = table.Column<Guid>(type: "uuid", nullable: true),
                     CategoryName = table.Column<string>(type: "text", nullable: true),
                     Tags = table.Column<string[]>(type: "text[]", nullable: true),
@@ -301,14 +301,12 @@ namespace Accounting.Migrations
                     TransactionMethod = table.Column<string>(type: "text", nullable: true),
                     TransactionStatus = table.Column<string>(type: "text", nullable: true),
                     PayTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    SourceChannelCode = table.Column<string>(type: "text", nullable: false),
-                    SourceChannelId = table.Column<string>(type: "text", nullable: false),
                     CreatedTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     LastModifiedTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LedgerRecords", x => x.Id);
+                    table.PrimaryKey("PK_LedgerRecords", x => new { x.SourceChannelCode, x.SourceChannelId });
                     table.ForeignKey(
                         name: "FK_LedgerRecords_AssetAccounts_AssetAccountId",
                         column: x => x.AssetAccountId,
@@ -401,7 +399,8 @@ namespace Accounting.Migrations
                     FileId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     LastModifiedTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    LedgerRecordId = table.Column<long>(type: "bigint", nullable: true)
+                    LedgerRecordSourceChannelCode = table.Column<string>(type: "text", nullable: true),
+                    LedgerRecordSourceChannelId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -412,10 +411,10 @@ namespace Accounting.Migrations
                         principalTable: "FileInformations",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_LedgerRecordAttachments_LedgerRecords_LedgerRecordId",
-                        column: x => x.LedgerRecordId,
+                        name: "FK_LedgerRecordAttachments_LedgerRecords_LedgerRecordSourceCha~",
+                        columns: x => new { x.LedgerRecordSourceChannelCode, x.LedgerRecordSourceChannelId },
                         principalTable: "LedgerRecords",
-                        principalColumn: "Id");
+                        principalColumns: new[] { "SourceChannelCode", "SourceChannelId" });
                 });
 
             migrationBuilder.CreateIndex(
@@ -487,9 +486,9 @@ namespace Accounting.Migrations
                 column: "FileId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LedgerRecordAttachments_LedgerRecordId",
+                name: "IX_LedgerRecordAttachments_LedgerRecordSourceChannelCode_Ledge~",
                 table: "LedgerRecordAttachments",
-                column: "LedgerRecordId");
+                columns: new[] { "LedgerRecordSourceChannelCode", "LedgerRecordSourceChannelId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_LedgerRecords_AssetAccountId",
@@ -500,12 +499,6 @@ namespace Accounting.Migrations
                 name: "IX_LedgerRecords_LedgerId",
                 table: "LedgerRecords",
                 column: "LedgerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LedgerRecords_SourceChannelCode_SourceChannelId",
-                table: "LedgerRecords",
-                columns: new[] { "SourceChannelCode", "SourceChannelId" },
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_LedgerTags_LedgerId",

@@ -1,10 +1,11 @@
 using Accounting;
 using Accounting.Books;
+using Accounting.Core.DependencyInjection;
 using Accounting.FileStorage;
 using Accounting.Imports;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Accounting.Stores.DependencyInjection;
 
 public static class AccountingBuilderExtensions
 {

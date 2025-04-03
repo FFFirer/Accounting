@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Accounting.Core.DependencyInjection;
 
 public class AccountingBuilder
 {
@@ -25,8 +25,6 @@ public static class AccountingBuilderExtensions
 {
     public static AccountingBuilder AddAccountingCore(this IServiceCollection services)
     {
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AccountingBuilderExtensions).Assembly));
-    
         services.AddTransient<CsvFileReader>();
         services.AddTransient<ImportErrorDescriber>();
         services.AddKeyedScoped<IChannelFileParser, AlipayFileParser>(ImportChannels.Alipay.Code);

@@ -33,6 +33,6 @@ const toggleTheme = (e) => {
   window.blazorInterop.setCookie("theme", checked ? theme : '');
 }
 
-const debugEvent = e => {
-  debugger;
+const clearValue = (el) => {
+  el.value = undefined;
 }

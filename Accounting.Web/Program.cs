@@ -1,8 +1,10 @@
 ﻿using Accounting;
 using Accounting.Common;
+using Accounting.Core.DependencyInjection;
 using Accounting.Email;
 using Accounting.Quartz;
 using Accounting.Quartz.Endpoints;
+using Accounting.Stores.DependencyInjection;
 using Accounting.Web;
 using Accounting.Web.Client;
 using Accounting.Web.Common;
@@ -118,7 +120,15 @@ builder.Services.Configure<ForwardedHeadersOptions>(
     }
 );
 
-builder.Services.AddAccountingCore()
+
+builder.Services
+    .AddMediatR(cfg => {
+        cfg.RegisterServicesFromAssembly(typeof(Accounting.Core.DependencyInjection.AccountingBuilderExtensions).Assembly);
+        cfg.RegisterServicesFromAssembly(typeof(Accounting.Stores.DependencyInjection.AccountingBuilderExtensions).Assembly);
+    });
+
+builder.Services
+    .AddAccountingCore()
     .AddFileStorage()
     .AddEntityFrameworkCoreStores();
 

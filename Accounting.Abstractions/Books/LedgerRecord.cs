@@ -15,7 +15,6 @@ public class LedgerRecord
         decimal amount,
         string currency)
     {
-        Id = 0;
         Amount = amount;
         Currency = currency;
         CreatedTime = DateTimeOffset.UtcNow;
@@ -23,8 +22,6 @@ public class LedgerRecord
         SourceChannelCode = sourceCode;
         SourceChannelId = sourceId;
     }
-
-    public long Id { get; set; }
 
     /// <summary>
     /// 所属账本
@@ -69,7 +66,7 @@ public class LedgerRecord
     /// <summary>
     /// 所属资产账户
     /// </summary>
-    public AssetAccount? AssetAccount { get; set; }
+    public string? AssetAccountId { get; set; }
 
     public string? TransactionType { get; set; }
 

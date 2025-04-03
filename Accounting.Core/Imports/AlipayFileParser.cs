@@ -1,5 +1,6 @@
 using System.Dynamic;
 using System.Globalization;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using Accounting.Asset;
 using Accounting.Books;
@@ -22,6 +23,7 @@ public class AlipayFileParser : IChannelFileParser
         this.CsvFile = csvFile;
     }
 
+
     public async Task<Result<List<LedgerRecord>>> ParseAsync(ImportRecord record, CancellationToken cancellationToken)
     {
         if (record.File?.StoragePath is null)
@@ -32,6 +34,13 @@ public class AlipayFileParser : IChannelFileParser
         if (File.Exists(record.File.StoragePath) == false)
         {
             return Result<List<LedgerRecord>>.Failed(this.ErrorDescriber.FileNotExists(record.File.StoragePath));
+        }
+
+        var checkResult = await CsvFile.CheckHeaders(record.File.StoragePath, 24, cancellationToken, checkHeaders: headers);
+
+        if (checkResult.Succeeded == false)
+        {
+            return Result<List<LedgerRecord>>.Failed(checkResult.Errors);
         }
 
         var records = await CsvFile.ParseAsync<LedgerRecord>(record.File.StoragePath, 24, new AlipayLedgerRecordMap(), cancellationToken);
@@ -55,6 +64,7 @@ public class AlipayFileParser : IChannelFileParser
         return DateTimeOffset.Parse(v);
     }
 
+    static readonly string[] headers = ["收/支", "金额", "人民币", "备注", "交易分类", "商家订单号", "交易对方", "对方账号", "商品说明", "收/付款方式", "交易状态", "交易时间", "交易订单号"];
     public class AlipayLedgerRecordMap : ClassMap<LedgerRecord>
     {
         public AlipayLedgerRecordMap()
