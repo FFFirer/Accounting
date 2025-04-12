@@ -1,8 +1,15 @@
 import { defineConfig, Plugin } from 'vite';
 import solidPlugin from 'vite-plugin-solid';
-import { resolve } from 'path';
+import { dirname, resolve } from 'path';
 import tailwindcss from '@tailwindcss/vite';
-import MagicString from "magic-string"
+import { fileURLToPath } from 'url';
+
+const __filename= fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// console.log('__dirname is', __dirname);
+// const entryPath = resolve(__dirname, './frontend/index.tsx');
+// console.log('entryPath is', entryPath);
 
 export default defineConfig({
   plugins: [tailwindcss(), solidPlugin()],
@@ -18,6 +25,7 @@ export default defineConfig({
     lib: {
       name: "AccountingFrontend",
       entry: resolve(__dirname, './frontend/index.tsx'),
+      formats: ['es', "umd"],
       fileName: "index"
     }
   },

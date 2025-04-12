@@ -1,0 +1,13 @@
+.github/
+.idea/
+.vs/
+.vscode/
+.git/
+.gitignore
+.editorconfig
+DevProxy/
+dist/
+docs/
+node_modules/
+publish/
+
