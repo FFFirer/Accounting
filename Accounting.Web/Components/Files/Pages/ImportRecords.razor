@@ -1,7 +1,7 @@
 @page "/Import/Records"
+@rendermode InteractiveServer
 
 <PageTitle>导入记录</PageTitle>
-
 
 <div class="size-full flex flex-1 flex-col">
     <div class="flex flex-row mb-2 gap-2">
@@ -10,17 +10,17 @@
             查询
         </button>
     </div>
-    <div class="grow overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-        <QuickGrid class="table" RowClass="GetRowClass" TGridItem="ImportRecordDto" ItemsProvider="GetItems">
+    <div class="grow overflow-auto rounded-box border border-base-content/5 bg-base-100">
+        <QuickGrid Pagination="pagination" class="table" RowClass="GetRowClass" TGridItem="ImportRecordDto"
+            ItemKey="(x => x.Id)" ItemsProvider="GetItems">
             <PropertyColumn class="text-nowrap" Property="@(p => p.FileName)">
             </PropertyColumn>
-            <PropertyColumn class="text-nowrap" Property="@(p => p.CreatedTime)" Format="yyyy-MM-dd HH:mm:ss"></PropertyColumn>
+            <PropertyColumn class="text-nowrap" Property="@(p => p.CreatedTime)" Format="yyyy-MM-dd HH:mm:ss">
+            </PropertyColumn>
             <PropertyColumn Class="text-nowrap" Property="@(p => p.ChannelName)"></PropertyColumn>
             <PropertyColumn Class="text-nowrap" Property="@(p => p.Status.ToString())" Title="Status"></PropertyColumn>
             <PropertyColumn class="text-nowrap" Property="@(p => p.Count)"></PropertyColumn>
         </QuickGrid>
     </div>
-
-    
     <Paginator State="pagination" />
 </div>

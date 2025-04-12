@@ -1,4 +1,5 @@
 ﻿@page "/Ledgers"
+@rendermode InteractiveServer
 
 @using Accounting.Books
 @using Microsoft.EntityFrameworkCore
@@ -28,6 +29,9 @@
         <NavLink href="/Import/Records" class="btn">
             <LibraryIcon />
             导入记录
+        </NavLink>
+        <NavLink href="/Ledger/AllRecords" class="btn">
+            全部记录
         </NavLink>
     </div>
 

@@ -83,7 +83,7 @@ public class LedgerRecord
     public string? TransactionAccount { get; set; }
 
     /// <summary>
-    /// 来源渠道Id
+    /// 交易内容
     /// </summary>
     public string? TransactionContent { get; set; }
 

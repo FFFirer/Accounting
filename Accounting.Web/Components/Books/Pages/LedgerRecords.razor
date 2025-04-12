@@ -1,4 +1,6 @@
 ﻿@page "/Ledgers/{LedgerId}/Records"
+@rendermode InteractiveServer
+
 @using Accounting.Books
 @using Microsoft.AspNetCore.Mvc
 @using Microsoft.EntityFrameworkCore
@@ -18,7 +20,7 @@
         </NavLink>
     </div>
 
-    <div class="grow overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+    <div class="grow overflow-auto rounded-box border border-base-content/5 bg-base-100">
         <QuickGrid class="table" TGridItem="LedgerRecord" ItemsProvider="GetLedgerRecords">
             <PropertyColumn Property="p => p.PayTime" Format="yyyy-MM-dd HH:mm:ss"></PropertyColumn>
             <TemplateColumn Context="record" Title="收支">

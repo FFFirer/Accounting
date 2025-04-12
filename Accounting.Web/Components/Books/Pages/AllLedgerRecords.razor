@@ -1,0 +1,47 @@
+﻿@page "/Ledger/AllRecords"
+@using Accounting.Books
+@rendermode InteractiveServer
+
+<PageTitle>所有账单记录</PageTitle>
+
+<div class="size-full flex flex-1 flex-col">
+    <div class="flex flex-row mb-2 gap-2">
+
+        <button type="button" class="btn btn-primary">
+            <SearchIcon></SearchIcon>
+            查询
+        </button>
+    </div>
+
+    <div class="grow shrink overflow-auto rounded-box border border-base-content/5 bg-base-100">
+        <QuickGrid Pagination="paginationState" Class="table" RowClass="GetRowClass" TGridItem="LedgerRecord" ItemsProvider="GetRecords">
+            <PropertyColumn Class="text-nowrap" Property="@(x => x.SourceChannelCode)" Title="渠道"></PropertyColumn>
+            <PropertyColumn Class="text-nowrap" Property="@(x => x.SourceChannelId)" Title="渠道流水单号"></PropertyColumn>
+            <PropertyColumn Class="text-nowrap" Property="@(x => x.PayTime)" Format="yyyy-MM-dd HH:mm:ss" Title="付款时间"></PropertyColumn>
+            <PropertyColumn Class="text-nowrap" Property="@(x => x.CategoryName)" Title="分类"></PropertyColumn>
+            <TemplateColumn Class="text-nowrap" Context="record" Title="收/支">
+                <span>
+                    @(record.FlowDirection switch
+                    {
+                        Asset.AssetFlowDirection.Expenditure => "支出",
+                        Asset.AssetFlowDirection.Revenue => "收入",
+                        _ => "不计收支"
+                    })
+                </span>
+            </TemplateColumn>
+            <PropertyColumn Class="text-nowrap" Property="@(x => x.Amount)" Title="金额"></PropertyColumn>
+            <PropertyColumn Class="text-nowrap" Property="@(x => x.Currency)" Title="货币"></PropertyColumn>
+            <PropertyColumn Class="text-nowrap" Property="@(x => x.Remark)" Title="备注"></PropertyColumn>
+
+            <PropertyColumn Class="text-nowrap" Property="@(x => x.TransactionMethod)" Title="交易方式"></PropertyColumn>
+            <PropertyColumn Class="text-nowrap" Property="@(x => x.TransactionParty)" Title="交易方"></PropertyColumn>
+            <PropertyColumn Class="text-nowrap" Property="@(x => x.TransactionId)" Title="交易流水号"></PropertyColumn>
+            <PropertyColumn Class="text-nowrap" Property="@(x => x.TransactionAccount)" Title="交易方账号"></PropertyColumn>
+            <PropertyColumn Class="text-nowrap" Property="@(x => x.TransactionContent)" Title="交易内容"></PropertyColumn>
+            <PropertyColumn Class="text-nowrap" Property="@(x => x.TransactionCreatedTime)" Title="交易创建时间"></PropertyColumn>
+            <PropertyColumn Class="text-nowrap" Property="@(x => x.TransactionStatus)" Title="交易状态"></PropertyColumn>
+        </QuickGrid>
+    </div>
+
+    <Paginator State="paginationState" />
+</div>

@@ -1,4 +1,6 @@
 ﻿@page "/Files"
+@rendermode InteractiveServer
+
 @using Accounting.Data
 @using Accounting.FileStorage
 @using System.Linq.Dynamic.Core
@@ -28,7 +30,7 @@
             上传
         </NavLink>
     </div>
-    <div class="grow overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+    <div class="grow overflow-auto rounded-box border border-base-content/5 bg-base-100">
         <QuickGrid class="table" RowClass="GetRowClass" TGridItem="FileInformation" ItemsProvider="GetFiles">
             <TemplateColumn Context="file" Title="File">
                 <div class="font-bold">@file.OriginalFileName</div>
