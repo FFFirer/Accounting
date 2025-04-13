@@ -35,6 +35,10 @@ export default defineConfig({
       {
         find: '@web',
         replacement: resolve(__dirname, './Accounting.Web')
+      },
+      {
+        find: '@webclient',
+        replacement: resolve(__dirname, './Accounting.Web.Client')
       }
     ]
   }

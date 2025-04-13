@@ -13,3 +13,5 @@ publish/
 docker/
 docker-compose.yaml
 docker-compose-dev.yaml
+**/obj/
+**/bin/

@@ -68,14 +68,20 @@ public class DatabaseCommand : Command
                     continue;
                 }
 
-                var migrations = (await dbContext.Database.GetPendingMigrationsAsync(context.GetCancellationToken())).Select(x => new
+                var pendingMigrations = (await dbContext.Database.GetPendingMigrationsAsync(context.GetCancellationToken())).Select(x => new
                 {
                     Name = x
                 }).ToList();
 
-                await dbContext.Database.MigrateAsync(target, context.GetCancellationToken());
-
-                context.FormatToOutput(migrations, "table");
+                if (pendingMigrations.IsNullOrEmpty())
+                {
+                    context.Console.WriteLine("No pending migrations.");
+                }
+                else
+                {
+                    await dbContext.Database.MigrateAsync(target, context.GetCancellationToken());
+                    context.FormatToOutput(pendingMigrations, "table");
+                }
 
                 //context.Console.FullSingleLine();
                 context.Console.WriteLine("");

@@ -1,6 +1,5 @@
 ARG NODE_VERSION=22
 ARG DOTNET_VERSION=10.0-preview-alpine
-ARG NPM_REGISTRY=http://10.9.0.1:4873
 
 FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION} AS base
 USER app
@@ -9,6 +8,8 @@ EXPOSE 8080
 EXPOSE 8081
 
 FROM node:${NODE_VERSION}-alpine AS node-base
+
+ARG NPM_REGISTRY=http://10.9.0.1:4873
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -24,9 +25,11 @@ WORKDIR /src
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 COPY ["./Accounting.Web", "./Accounting.Web"]
+COPY ["./Accounting.Web.Client", "./Accounting.Web.Client"]
 COPY ["./frontend", "./frontend"]
 
 RUN pnpm run build
+RUN pnpm run css:build
 
 FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION} AS dotnet-build
 ARG BUILD_CONFIGURATION=${BUILD_CONFIGURATION:-Release}

@@ -1,6 +1,11 @@
 x-accounting-depends-on: &accounting-depends-on
-  - db
-  - migrator
+  db:
+    condition: service_started
+  migrator:
+    condition: service_completed_successfully
+x-accounting-migrator-depends-on: &accounting-migrator-depends-on
+  db:
+    condition: service_started
 x-accounting-env-file: &accounting-env-file
   - ./docker/.env-dev
 
@@ -21,6 +26,7 @@ services:
       dockerfile: Migrator.Dockerfile
     container_name: accounting_migrator
     env_file: *accounting-env-file
+    depends_on: *accounting-migrator-depends-on
   
   app:
     build: 

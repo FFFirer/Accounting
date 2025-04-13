@@ -15,6 +15,7 @@
       "paths": {
         "@frontend/*": ["./frontend/*"],
         "@web/*": ["./Accounting.Web/*"],
+        "@webclient/*": ["./Accounting.Web.Client/*"]        
       }
     },
     "include": ["frontend", "index.html", "index.tsx"]
