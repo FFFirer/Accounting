@@ -1,8 +1,12 @@
-FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION:-10.0-preview-alpine} AS base
+ARG DOTNET_VERSION=${DOTNET_VERSION:-10.0-preview-alpine}
+
+FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION} AS base
 USER app
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION:-10.0-preview-alpine} AS dotnet-build
+FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION} AS dotnet-build
+
+ARG BUILD_CONFIGURATION=${BUILD_CONFIGURATION:-Release}
 
 COPY ["./Accounting.Abstractions/Accounting.Abstractions.csproj", "/src/Accounting.Abstractions/"]
 COPY ["./Accounting.Core/Accounting.Core.csproj", "/src/Accounting.Core/"]
@@ -22,7 +26,7 @@ COPY ["./Accounting.Quartz", "./Accounting.Quartz"]
 COPY ["./Accounting.Quartz.Migrations", "./Accounting.Quartz.Migrations"]
 COPY ["./Accounting.Stores", "./Accounting.Stores"]
 
-RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages dotnet build "./Accounting.Migrator/Accounting.Migrator.csproj" -c ${BUILD_CONFIGURATION:-Release} -o /app/build 
+RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages dotnet build "./Accounting.Migrator/Accounting.Migrator.csproj" -c $BUILD_CONFIGURATION -o /app/build 
 
 FROM dotnet-build AS publish
 ARG BUILD_CONFIGURATION=Release

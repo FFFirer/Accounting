@@ -21,6 +21,7 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.DynamicLinq" Version="9.6.0.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.0-preview.1.25081.1" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0-preview.1.25081.1" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.0-preview.1.25080.5" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.0-preview.1.25080.5" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.0-preview.1.25080.5" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.0-preview.2.25163.2" />

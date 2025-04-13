@@ -1,17 +1,20 @@
-FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION:-10.0-preview-alpine} AS base
+ARG NODE_VERSION=22
+ARG DOTNET_VERSION=10.0-preview-alpine
+ARG NPM_REGISTRY=http://10.9.0.1:4873
+
+FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION} AS base
 USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-FROM node:${NODE_VERSION:-22}-alpine AS node-base
+FROM node:${NODE_VERSION}-alpine AS node-base
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-# RUN npm config set registry http://registry.npmmirror.com
-RUN npm config set registry http://10.9.0.1:4873
+RUN npm config set registry ${NPM_REGISTRY}
 
 FROM node-base AS node-build
 
@@ -23,11 +26,10 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY ["./Accounting.Web", "./Accounting.Web"]
 COPY ["./frontend", "./frontend"]
 
-RUN ls /src
-
 RUN pnpm run build
 
-FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION:-10.0-preview-alpine} AS dotnet-build
+FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION} AS dotnet-build
+ARG BUILD_CONFIGURATION=${BUILD_CONFIGURATION:-Release}
 
 COPY ["./Accounting.Abstractions/Accounting.Abstractions.csproj", "/src/Accounting.Abstractions/"]
 COPY ["./Accounting.Core/Accounting.Core.csproj", "/src/Accounting.Core/"]
@@ -50,10 +52,9 @@ COPY ["./Accounting.Web.Client", "./Accounting.Web.Client"]
 RUN rm -rf "/src/Accounting.Web/wwwroot/frontend/*"
 COPY --from=node-build ["/src/dist/*", "./Accounting.Web/wwwroot/frontend/"]
 
-RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages dotnet build "./Accounting.Web/Accounting.Web.csproj" -c ${BUILD_CONFIGURATION:-Release} -o /app/build 
+RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages dotnet build "./Accounting.Web/Accounting.Web.csproj" -c $BUILD_CONFIGURATION -o /app/build 
 
 FROM dotnet-build AS publish
-ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Accounting.Web/Accounting.Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final

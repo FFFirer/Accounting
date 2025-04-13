@@ -10,7 +10,6 @@ public static class Helper
 
     public static IConfiguration BuildConfiguration()
     {
-
         var configurationBuilder = new ConfigurationBuilder();
         configurationBuilder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
         configurationBuilder.AddUserSecrets<Root>();
@@ -38,17 +37,19 @@ public static class Helper
         var configuration = BuildConfiguration();
         dynamic? factory = Activator.CreateInstance(factoryType, configuration);
 
+        connectionName ??= "Default";
+
         return factory?.CreateDbContext(new string[]
         {
             "connection-name",
-            (connectionName ?? "Default")
+            connectionName
         });
     }
 
     public static IServiceProvider BuildServiceProvider(string connectionName)
     {
         var configuration = BuildConfiguration();
-        
+
         var services = new ServiceCollection();
 
         services.AddLogging();

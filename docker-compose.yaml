@@ -1,0 +1,28 @@
+x-accounting-image: &accounting-image registry.private.fffirer.top:9999/accounting/accounting:${TAG:-latest}
+x-accounting-migrator-image: &accounting-migrator-image registry.private.fffirer.top:9999/accounting/migrator:${TAG:-latest}
+x-accounting-depends-on: 
+  - db
+  - migrator
+x-accounting-env-file:
+  - ./docker/.env
+
+version: '3.9'
+
+services:
+  db:
+    image: postgres:16.2
+    container_name: accoutning_db
+    restart: unless-stopped
+    env_file: *accounting-env-file
+
+  migrator:
+    image: *accounting-migrator-image
+    container_name: accounting_migrator
+    env_file: *accounting-env-file
+  
+  app:
+    image: *accounting-image
+    env_file: *accounting-env-file
+    ports:
+      - "8080:80"
+    depends_on: *accounting-depends-on

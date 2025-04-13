@@ -10,4 +10,6 @@ dist/
 docs/
 node_modules/
 publish/
-
+docker/
+docker-compose.yaml
+docker-compose-dev.yaml
