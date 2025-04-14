@@ -29,13 +29,13 @@ $Migrator_TAG_Latest = "$($Registry)/$($MigratorImageName):latest"
 
 if ($Build) {
     docker build -t "$($App_TAG)" -f $App_Dockerfile .
-
     docker build -t "$($Migrator_TAG)" -f $Migrator_Dockerfile .
+
+    docker tag "$($App_TAG)" "$($App_TAG_Latest)"; Write-Host "Tagging $($App_TAG) to $($App_TAG_Latest)";
+    docker tag "$($Migrator_TAG)" "$($Migrator_TAG_Latest)"; Write-Host "Tagging $($Migrator_TAG) to $($Migrator_TAG_Latest)";
 }
 
 if ($Push) {
-    docker tag "$($App_TAG)" "$($App_TAG_Latest)"; Write-Host "Tagging $($App_TAG) to $($App_TAG_Latest)";
-    docker tag "$($Migrator_TAG)" "$($Migrator_TAG_Latest)"; Write-Host "Tagging $($Migrator_TAG) to $($Migrator_TAG_Latest)";
     docker push "$($App_TAG)"
     docker push "$($App_TAG_Latest)"
     docker push "$($Migrator_TAG)"

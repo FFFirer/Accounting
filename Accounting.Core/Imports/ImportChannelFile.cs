@@ -1,5 +1,6 @@
 using Accounting.Books;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Accounting.Imports;
 
@@ -8,9 +9,11 @@ public class ImportChannelFileNotificationHandler : INotificationHandler<ImportC
     protected virtual ChannelFileParseService Service { get; set; }
     protected virtual ILedgerStore Store { get; set; }
     protected virtual IMediator Mediator { get; set; }
+    protected virtual ILogger Logger { get; set; }
 
-    public ImportChannelFileNotificationHandler(ChannelFileParseService service, ILedgerStore store, IMediator mediator)
+    public ImportChannelFileNotificationHandler(ChannelFileParseService service, ILedgerStore store, IMediator mediator, ILogger<ImportChannelFileNotificationHandler> logger)
     {
+        this.Logger = logger;
         this.Service = service;
         this.Store = store;
         this.Mediator = mediator;
@@ -41,8 +44,9 @@ public class ImportChannelFileNotificationHandler : INotificationHandler<ImportC
 
             await this.Mediator.Publish(new UpdateImportRecordStatusNotification { ImportRecordId = notification.Record.Id, From = ImportStatus.Resolving, To = ImportStatus.Succeeded }).ConfigureAwait(false);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            this.Logger.LogError(ex, "导入文件失败");
             await this.Mediator.Publish(new UpdateImportRecordStatusNotification { ImportRecordId = notification.Record.Id, From = ImportStatus.Resolving, To = ImportStatus.Failed }).ConfigureAwait(false);
         }
     }

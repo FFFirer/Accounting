@@ -62,7 +62,7 @@ public class WeChatFileParser : IChannelFileParser
         return DateTimeOffset.Parse(v);
     }
 
-    static readonly string[] headers = ["收/支", "金额(元)", "人民币", "备注", "交易类型", "商户单号", "交易对方", "商品", "支付方式", "当前状态", "交易时间", "交易单号"];
+    static readonly string[] headers = ["收/支", "金额(元)", "备注", "交易类型", "商户单号", "交易对方", "商品", "支付方式", "当前状态", "交易时间", "交易单号"];
 
     private class WeChatLedgerRecordMap : ClassMap<LedgerRecord>
     {
@@ -76,7 +76,7 @@ public class WeChatFileParser : IChannelFileParser
                 return args.Row["备注"];
             });
             Map(x => x.CategoryName).Name("交易类型");
-            Map(x => x.TransactionId).Convert(args => args.Row["商户单号"]?.Trim());
+            Map(x => x.TransactionId).Name("商户单号");
             Map(x => x.TransactionParty).Name("交易对方");
             Map(x => x.TransactionContent).Name("商品");
             Map(x => x.TransactionMethod).Name("支付方式");
